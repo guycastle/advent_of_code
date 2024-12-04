@@ -1,0 +1,8 @@
+project/project
+target
+.idea
+.bsp
+.java-version
+*.iml
+.DS_store
+src/main/resources/inputs/*.txt
