@@ -1,0 +1,68 @@
+package aoc2024.day06
+
+import utils.DailyChallenge
+
+import java.time.LocalDate
+import scala.annotation.tailrec
+
+object DaySix extends DailyChallenge[Int]:
+
+  override lazy val day: LocalDate = LocalDate.of(2024, 12, 6)
+
+  override def partOne(input: Seq[String]): Int =
+    val (grid, start, direction) = parseInput(input)
+    walkGrid(grid = grid, position = start, move = direction, history = Set(start))
+
+  override def partTwo(input: Seq[String]): Int = 0
+
+  @main def run(): Unit = evaluate()
+
+  private type Position    = (Int, Int)
+  private type Movement    = (Int, Int)
+  private type Up          = '^'
+  private type Down        = 'v'
+  private type Left        = '<'
+  private type Right       = '>'
+  private type Direction   = Up | Down | Left | Right
+  private type EmptyTile   = '.'
+  private type Obstruction = '#'
+
+  private type Tile = EmptyTile | Obstruction | Direction
+
+  type Row  = Map[Int, Tile]
+  type Grid = Map[Int, Row]
+
+  private val directionToMovement: PartialFunction[Direction, Movement] =
+    case _: Up    => (0, -1)
+    case _: Down  => (0, 1)
+    case _: Left  => (-1, 0)
+    case _: Right => (1, 0)
+
+  private val rightTurn: PartialFunction[Movement, Movement] =
+    case (0, -1) => (1, 0)
+    case (1, 0)  => (0, 1)
+    case (0, 1)  => (-1, 0)
+    case (-1, 0) => (0, -1)
+
+  private val parseInput: Seq[String] => (Grid, Position, Movement) = input =>
+    input.zipWithIndex.foldLeft((Map.empty[Int, Row], (0, 0), (-1, -1))):
+      case ((grid, position, direction), ((row, rowNumber))) =>
+        val (colMap, start, dir) = row.zipWithIndex.foldLeft((Map.empty[Int, Tile], position, direction)):
+          case ((colMap, start, dir), (col: Obstruction, colNumber)) => (colMap.updated(colNumber, col), start, dir)
+          case ((colMap, start, dir), (col: EmptyTile, colNumber))   => (colMap.updated(colNumber, col), start, dir)
+          case ((colMap, _, _), (col: Direction, colNumber))         => (colMap.updated(colNumber, col), (colNumber, rowNumber), directionToMovement(col))
+          case (acc, _)                                              => acc
+        (grid.updated(rowNumber, colMap), start, dir)
+  end parseInput
+
+  @tailrec
+  private def walkGrid(grid: Grid, position: Position, move: Movement, history: Set[Position]): Int =
+    val (x, y)         = position
+    val (dx, dy)       = move
+    val (nextX, nextY) = (x + dx, y + dy)
+    grid.get(nextY).flatMap(_.get(nextX)) match
+      case Some(_: Obstruction) => walkGrid(grid = grid, position = position, move = rightTurn(move), history = history + position)
+      case Some(_)              => walkGrid(grid = grid, position = (nextX, nextY), move = move, history = history + position)
+      case None                 => history.size + 1
+
+end DaySix
