@@ -11,9 +11,20 @@ object DaySix extends DailyChallenge[Int]:
 
   override def partOne(input: Seq[String]): Int =
     val (grid, start, direction) = parseInput(input)
-    walkGrid(grid = grid, position = start, move = direction, history = Set(start))
+    walkGrid(grid = grid, position = start, move = direction, history = Set(start)).size
 
-  override def partTwo(input: Seq[String]): Int = 0
+  override def partTwo(input: Seq[String]): Int =
+    val (grid, start, direction) = parseInput(input)
+    // not really happy with performance, need to find better way.
+    walkGrid(grid = grid, position = start, move = direction, history = Set(start))
+      .filterNot(_ == start)
+      .count: (newObstructionX, newObstructionY) =>
+        isGridLooping(
+          grid = grid.updatedWith(newObstructionY)(rowOpt => rowOpt.map(_.updated(newObstructionX, '#'))),
+          position = start,
+          move = direction,
+          history = Set.empty,
+        )
 
   @main def run(): Unit = evaluate()
 
@@ -56,13 +67,24 @@ object DaySix extends DailyChallenge[Int]:
   end parseInput
 
   @tailrec
-  private def walkGrid(grid: Grid, position: Position, move: Movement, history: Set[Position]): Int =
+  private def walkGrid(grid: Grid, position: Position, move: Movement, history: Set[Position]): Set[Position] =
     val (x, y)         = position
     val (dx, dy)       = move
     val (nextX, nextY) = (x + dx, y + dy)
     grid.get(nextY).flatMap(_.get(nextX)) match
       case Some(_: Obstruction) => walkGrid(grid = grid, position = position, move = rightTurn(move), history = history + position)
       case Some(_)              => walkGrid(grid = grid, position = (nextX, nextY), move = move, history = history + position)
-      case None                 => history.size + 1
+      case None => history + position
+
+  @tailrec
+  private def isGridLooping(grid: Grid, position: Position, move: Movement, history: Set[(Position, Movement)]): Boolean =
+    val (x, y) = position
+    val (dx, dy) = move
+    val (nextX, nextY) = (x + dx, y + dy)
+    grid.get(nextY).flatMap(_.get(nextX)) match
+      case Some(_: Obstruction) => isGridLooping(grid = grid, position = position, move = rightTurn(move), history = history + ((position, move)))
+      case Some(_) if history.contains((position, move)) => true
+      case Some(_) => isGridLooping(grid = grid, position = (nextX, nextY), move = move, history = history + ((position, move)))
+      case None => false
 
 end DaySix
