@@ -20,4 +20,8 @@ class DaySevenTest extends BaseTest:
     "Return the sum of the calibration of equations that can be true" in:
       DaySeven.partOne(input) mustBe 3749
 
+  "Processing the input for part two" must :
+
+    "Take into account the extra concatenation operator and return the sum like in part one" in :
+      DaySeven.partTwo(input) mustBe 11387
 end DaySevenTest
