@@ -74,17 +74,17 @@ object DaySix extends DailyChallenge[Int]:
     grid.get(nextY).flatMap(_.get(nextX)) match
       case Some(_: Obstruction) => walkGrid(grid = grid, position = position, move = rightTurn(move), history = history + position)
       case Some(_)              => walkGrid(grid = grid, position = (nextX, nextY), move = move, history = history + position)
-      case None => history + position
+      case None                 => history + position
 
   @tailrec
   private def isGridLooping(grid: Grid, position: Position, move: Movement, history: Set[(Position, Movement)]): Boolean =
-    val (x, y) = position
-    val (dx, dy) = move
+    val (x, y)         = position
+    val (dx, dy)       = move
     val (nextX, nextY) = (x + dx, y + dy)
     grid.get(nextY).flatMap(_.get(nextX)) match
       case Some(_: Obstruction) => isGridLooping(grid = grid, position = position, move = rightTurn(move), history = history + ((position, move)))
       case Some(_) if history.contains((position, move)) => true
       case Some(_) => isGridLooping(grid = grid, position = (nextX, nextY), move = move, history = history + ((position, move)))
-      case None => false
+      case None    => false
 
 end DaySix

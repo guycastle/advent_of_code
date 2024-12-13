@@ -34,7 +34,7 @@ object DaySeven extends DailyChallenge[Long]:
 
   private def canBeSolved(equation: Equation, operators: Array[Operator] = Operator.values): Boolean =
     equation.numbers match
-      case List(a, b) => operators.exists(op => op.func(a, b) == equation.value)
+      case List(a, b)             => operators.exists(op => op.func(a, b) == equation.value)
       case head :: Nil            => head == equation.value
       case head :: (next :: tail) => operators.exists(op => canBeSolved(equation.copy(numbers = op.func(head, next) +: tail), operators))
       case Nil                    => false
