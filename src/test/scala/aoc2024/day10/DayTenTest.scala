@@ -14,14 +14,14 @@ class DayTenTest extends BaseTest:
       |01329801
       |10456732""".stripMargin.linesIterator.toSeq
 
-//  "Processing the input for part one" must:
-//
-//    "correctly calculate the sum of the scores of all trailheads on the map" in:
-//      DayTen.partOne(input) mustBe 36
-  
+  "Processing the input for part one" must:
+
+    "correctly calculate the sum of the scores of all trailheads on the map" in:
+      DayTen.partOne(input) mustBe 36
+
   "Processing the input for part two" must:
-    
-      "correctly calculate the sum of the ratings of all trailheads on the map" in:
-        DayTen.partTwo(input) mustBe 81
+
+    "correctly calculate the sum of the ratings of all trailheads on the map" in:
+      DayTen.partTwo(input) mustBe 81
 
 end DayTenTest

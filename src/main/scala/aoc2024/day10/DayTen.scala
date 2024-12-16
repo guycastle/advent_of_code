@@ -36,20 +36,21 @@ object DayTen extends DailyChallenge[Int]:
     case Left extends Direction(move = (x, y) => (x - 1, y))
     case Right extends Direction(move = (x, y) => (x + 1, y))
 
-
   end Direction
   object Direction:
     val skipOrigin: Direction => Seq[Direction] =
-      case Up => Seq(Left, Right, Up)
-      case Down => Seq(Left, Right, Down)
-      case Left => Seq(Up, Down, Left)
+      case Up    => Seq(Left, Right, Up)
+      case Down  => Seq(Left, Right, Down)
+      case Left  => Seq(Up, Down, Left)
       case Right => Seq(Up, Down, Right)
   end Direction
 
-  private def newPositionsAndPotentialDirections(position: Position,
-                                                 currentHeight: Int,
-                                                 directions: Seq[Direction],
-                                                 map: TopographicalMap): Seq[(Position, Seq[Direction])] =
+  private def newPositionsAndPotentialDirections(
+      position: Position,
+      currentHeight: Int,
+      directions: Seq[Direction],
+      map: TopographicalMap,
+  ): Seq[(Position, Seq[Direction])] =
     directions
       .foldLeft(Seq.empty[(Position, Seq[Direction])]):
         case (positionAndDirections, direction) =>
@@ -57,43 +58,48 @@ object DayTen extends DailyChallenge[Int]:
           map.heightAt(newPosition) match
             case Some(height) if height == currentHeight + 1 =>
               positionAndDirections :+ (newPosition -> Direction.skipOrigin(direction))
-            case Some(h) =>
-              positionAndDirections
-            case None =>
-              positionAndDirections
+            case _ => positionAndDirections
   end newPositionsAndPotentialDirections
 
-  private def trailScoreBySummits(position: Position,
-                                  map: TopographicalMap,
-                                  currentHeight: Int = 0,
-                                  summits: Set[Position] = Set.empty,
-                                  directions: Seq[Direction] = Direction.values.toSeq): Set[Position] =
+  private def trailScoreBySummits(
+      position: Position,
+      map: TopographicalMap,
+      currentHeight: Int = 0,
+      summits: Set[Position] = Set.empty,
+      directions: Seq[Direction] = Direction.values.toSeq,
+  ): Set[Position] =
     if currentHeight == 9 then summits + position
     else
       newPositionsAndPotentialDirections(position = position, currentHeight = currentHeight, directions = directions, map = map) match
         case Nil => summits
-        case (newPosition, directionsToCheck) :: Nil => trailScoreBySummits(position = newPosition, currentHeight = currentHeight + 1, summits = summits, map = map, directions = directionsToCheck)
+        case (newPosition, directionsToCheck) :: Nil =>
+          trailScoreBySummits(position = newPosition, currentHeight = currentHeight + 1, summits = summits, map = map, directions = directionsToCheck)
         case newPositions =>
           newPositions.foldLeft(summits):
-            case (summits, (newPosition, directionsToCheck)) => trailScoreBySummits(position = newPosition, currentHeight = currentHeight + 1, summits = summits, map = map, directions = directionsToCheck)
+            case (summits, (newPosition, directionsToCheck)) =>
+              trailScoreBySummits(position = newPosition, currentHeight = currentHeight + 1, summits = summits, map = map, directions = directionsToCheck)
   end trailScoreBySummits
 
-  private def trailScoreByPathCount(position: Position,
-                                  map: TopographicalMap,
-                                  currentHeight: Int = 0,
-                                  count: Int = 0,
-                                  directions: Seq[Direction] = Direction.values.toSeq): Int =
+  private def trailScoreByPathCount(
+      position: Position,
+      map: TopographicalMap,
+      currentHeight: Int = 0,
+      count: Int = 0,
+      directions: Seq[Direction] = Direction.values.toSeq,
+  ): Int =
     if currentHeight == 9 then count + 1
     else
       newPositionsAndPotentialDirections(position = position, currentHeight = currentHeight, directions = directions, map = map) match
         case Nil => count
-        case (newPosition, directionsToCheck) :: Nil => trailScoreByPathCount(position = newPosition, currentHeight = currentHeight + 1, count = count, map = map, directions = directionsToCheck)
+        case (newPosition, directionsToCheck) :: Nil =>
+          trailScoreByPathCount(position = newPosition, currentHeight = currentHeight + 1, count = count, map = map, directions = directionsToCheck)
         case newPositions =>
           newPositions.foldLeft(count):
-            case (summits, (newPosition, directionsToCheck)) => trailScoreByPathCount(position = newPosition, currentHeight = currentHeight + 1, count = count, map = map, directions = directionsToCheck)
+            case (count, (newPosition, directionsToCheck)) =>
+              trailScoreByPathCount(position = newPosition, currentHeight = currentHeight + 1, count = count, map = map, directions = directionsToCheck)
   end trailScoreByPathCount
 
-  private val parseInput: Seq[String] => (TopographicalMap, Seq[Position]) =_.zipWithIndex.foldLeft((TopographicalMap.empty, Seq.empty[Position])):
+  private val parseInput: Seq[String] => (TopographicalMap, Seq[Position]) = _.zipWithIndex.foldLeft((TopographicalMap.empty, Seq.empty[Position])):
     case ((map, heads), (row, y)) =>
       val (parsedRow, trailHeads) = row.zipWithIndex.foldLeft((Seq.empty[Int], heads)):
         case ((map, heads), (c, x)) =>
