@@ -21,9 +21,8 @@ trait Syntax:
     def toLongSequence: Seq[Long]                                         = splitAndConvert(_.toLongOption)
     private def splitAndConvert[A](function: String => Option[A]): Seq[A] = str.split("\\s+").toSeq.flatMap(function)
   end extension
-  
-  extension [A](opt: Option[A])
-    def toTry: Try[A] = opt.fold[Try[A]](Failure(new IllegalArgumentException("Option is empty")))(Success(_))
+
+  extension [A](opt: Option[A]) def toTry: Try[A] = opt.fold[Try[A]](Failure(new IllegalArgumentException("Option is empty")))(Success(_))
   end extension
 
   extension [A](iterable: Iterable[A])
@@ -36,13 +35,13 @@ trait Syntax:
     end foldLeftWhile
     def toTryIterable[B](function: A => Try[B]): Try[Seq[B]] =
       @tailrec
-      def tryElement(remaining: Iterable[A] = iterable, accumulator: Seq[B] = Seq.empty): Try[Seq[B]] =
-        remaining.headOption.map(function) match
-          case Some(Success(value)) => tryElement(remaining.tail, accumulator :+ value)
-          case Some(Failure(err)) => Failure(err)
-          case None => Success(accumulator)
+      def tryElement(remaining: Iterable[A], accumulator: Seq[B] = Seq.empty): Try[Seq[B]] = remaining.headOption.map(function) match
+        case Some(Success(value)) => tryElement(remaining.tail, accumulator :+ value)
+        case Some(Failure(err))   => Failure(err)
+        case None                 => Success(accumulator)
       end tryElement
       tryElement(iterable)
+    end toTryIterable
   end extension
 
 end Syntax
