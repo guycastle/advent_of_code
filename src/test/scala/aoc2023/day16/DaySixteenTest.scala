@@ -24,3 +24,4 @@ class DaySixteenTest extends BaseTest:
 
     "correctly find the starting point yielding the maximum amount of energised tiles" in:
       DaySixteen.partTwo(input) mustBe 51
+end DaySixteenTest

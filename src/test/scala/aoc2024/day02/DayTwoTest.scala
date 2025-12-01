@@ -4,8 +4,7 @@ import utils.BaseTest
 
 class DayTwoTest extends BaseTest:
 
-  private val input: Seq[String] =
-    """7 6 4 2 1
+  private val input: Seq[String] = """7 6 4 2 1
       |1 2 7 8 9
       |9 7 6 2 1
       |1 3 2 4 5

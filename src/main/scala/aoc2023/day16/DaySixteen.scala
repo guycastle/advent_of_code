@@ -21,6 +21,8 @@ object DaySixteen extends DailyChallenge[Int]:
       case (max, (coords, direction)) =>
         val energised = countEnergised(startingPoint = coords, direction = direction, contraption = contraption)
         if energised > max then energised else max
+        end if
+  end partTwo
 
   @main def run(): Unit = evaluate()
 
@@ -39,19 +41,21 @@ object DaySixteen extends DailyChallenge[Int]:
   private def countEnergised(startingPoint: Coords, direction: Direction, contraption: Contraption): Int =
     val (_, mapped) = navigate(c = startingPoint, dir = direction, contraption = contraption)
     mapped.map(_.count(_.isEnergised)).sum
+  end countEnergised
 
-  /** Navigate the contraption recursively
-    * @param c
-    *   the coordinates to evaluate
-    * @param dir
-    *   the direction we're coming from
-    * @param contraption
-    *   the contraption
-    * @param splits
-    *   a list of coordinates where the beam was already split. So we don't go through it twice
-    * @return
-    *   an updated contraption with updated tiles that were energised
-    */
+  /**
+   *  Navigate the contraption recursively
+   *  @param c
+   *    the coordinates to evaluate
+   *  @param dir
+   *    the direction we're coming from
+   *  @param contraption
+   *    the contraption
+   *  @param splits
+   *    a list of coordinates where the beam was already split. So we don't go through it twice
+   *  @return
+   *    an updated contraption with updated tiles that were energised
+   */
   private def navigate(c: Coords, dir: Direction, contraption: Contraption, splits: Seq[Coords] = Seq.empty): (Seq[Coords], Contraption) = (for
     row  <- contraption.lift(c.y)
     tile <- row.lift(c.x)
@@ -64,36 +68,32 @@ object DaySixteen extends DailyChallenge[Int]:
       if newDirs.size == 1 then navigate(c = newDirs.head.go(c), dir = newDirs.head, contraption = updatedContraption, splits = splits)
       else if !splits.contains(c) then
         newDirs.foldLeft((splits :+ c, updatedContraption)):
-          case ((splitPoints, currentContraption), newDir) =>
-            navigate(c = newDir.go(c), dir = newDir, contraption = currentContraption, splits = splitPoints)
+          case ((splitPoints, currentContraption), newDir) => navigate(c = newDir.go(c), dir = newDir, contraption = currentContraption, splits = splitPoints)
       else (splits, contraption)
+      end if
     case None => (splits, contraption)
 
   lazy val parseInput: Seq[String] => Contraption = _.map:
     _.collect:
       case '.' => Tile(Seq(_))
-      case '-' =>
-        Tile(
+      case '-' => Tile(
           action =
             case Direction.Up | Direction.Down            => Seq(Direction.Left, Direction.Right)
             case dir @ (Direction.Left | Direction.Right) => Seq(dir),
         )
-      case '|' =>
-        Tile(
+      case '|' => Tile(
           action =
             case Direction.Left | Direction.Right      => Seq(Direction.Up, Direction.Down)
             case dir @ (Direction.Up | Direction.Down) => Seq(dir),
         )
-      case '/' =>
-        Tile(
+      case '/' => Tile(
           action =
             case Direction.Up    => Seq(Direction.Right)
             case Direction.Down  => Seq(Direction.Left)
             case Direction.Left  => Seq(Direction.Down)
             case Direction.Right => Seq(Direction.Up),
         )
-      case '\\' =>
-        Tile(
+      case '\\' => Tile(
           action =
             case Direction.Up    => Seq(Direction.Left)
             case Direction.Down  => Seq(Direction.Right)

@@ -26,7 +26,7 @@ object DayThirteen extends DailyChallenge[Long]:
         split(input = remnant.drop(1), patterns = patterns :+ pattern)
     split(lines)
 
-  private def reflectsAt(pattern: Pattern, withSmudge: Boolean = false): Option[Int] =
+  private def reflectsAt(pattern: Pattern, withSmudge: Boolean): Option[Int] =
     lazy val mirrorsAt: Int => Boolean = idx =>
       val distance = math.min(pattern.size - idx, idx)
       if withSmudge then
@@ -40,10 +40,12 @@ object DayThirteen extends DailyChallenge[Long]:
             smudges + diff.getOrElse(0)
         smudges == 1
       else pattern.slice(idx, idx + distance) == pattern.slice(idx - distance, idx).reverse
+      end if
 
     pattern.indices.collectFirst:
       // Don't bother checking the first index
       case idx if idx != 0 && mirrorsAt(idx) => idx
+  end reflectsAt
 
   def reflectionIndex(pattern: Pattern, withSmudge: Boolean = false): Int = reflectsAt(pattern, withSmudge)
     .map(_ * 100)

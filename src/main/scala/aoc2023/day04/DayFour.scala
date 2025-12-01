@@ -12,19 +12,17 @@ object DayFour extends DailyChallenge[Int]:
 
   lazy val numberRegex: Regex = "[0-9]+".r
 
-  case class ScratchCardResult(gameId: Int, winningNumbers: Seq[Int], cardNumbers: Seq[Int], cardsWon: Int = 0) {
+  case class ScratchCardResult(gameId: Int, winningNumbers: Seq[Int], cardNumbers: Seq[Int], cardsWon: Int = 0):
     val winningNumberMatches: Int = winningNumbers.sorted.intersect(cardNumbers.sorted).size
-    lazy val calculatePoints: Int =
-      if winningNumberMatches > 0 then (1 * Math.pow(2, winningNumberMatches - 1)).toInt else 0
-    lazy val cardsWonTotal: Int = this.cardsWon + 1
-  }
+    lazy val calculatePoints: Int = if winningNumberMatches > 0 then (1 * Math.pow(2, winningNumberMatches - 1)).toInt else 0
+    lazy val cardsWonTotal: Int   = this.cardsWon + 1
+  end ScratchCardResult
 
   extension (str: String)
     private def splitBySpaceToNumbers: Seq[Int] = numberRegex.findAllIn(str).map(_.toInt).toSeq
 
     def toScratchCardResult: Option[ScratchCardResult] = str match
-      case s"Card $gameId: $winning | $cardNumbers" =>
-        Some(
+      case s"Card $gameId: $winning | $cardNumbers" => Some(
           ScratchCardResult(
             gameId = gameId.strip.toInt,
             winningNumbers = winning.splitBySpaceToNumbers,
@@ -36,13 +34,12 @@ object DayFour extends DailyChallenge[Int]:
         None
   end extension
 
-  private lazy val winnings: ScratchCardResult => Range =
-    card => (card.gameId + 1) to (card.gameId + card.winningNumberMatches)
+  private lazy val winnings: ScratchCardResult => Range = card => (card.gameId + 1) to (card.gameId + card.winningNumberMatches)
 
   @tailrec
   private def evaluateScratchCards(reversedCards: Seq[ScratchCardResult], cardMap: Map[Int, ScratchCardResult] = Map.empty): Seq[ScratchCardResult] =
     reversedCards.headOption match
-      case None => cardMap.values.toSeq
+      case None       => cardMap.values.toSeq
       case Some(card) =>
         val updatedCard =
           if card.winningNumberMatches == 0 then card
@@ -52,9 +49,7 @@ object DayFour extends DailyChallenge[Int]:
   override def partOne(input: Seq[String]): Int = input.flatMap(_.toScratchCardResult.map(_.calculatePoints)).sum
 
   override def partTwo(input: Seq[String]): Int =
-    evaluateScratchCards(input.flatMap(_.toScratchCardResult).reverse).foldLeft(0) { (sum, card) =>
-      sum + card.cardsWonTotal
-    }
+    evaluateScratchCards(input.flatMap(_.toScratchCardResult).reverse).foldLeft(0)((sum, card) => sum + card.cardsWonTotal)
 
   @main def run(): Unit = evaluate()
 

@@ -1,6 +1,6 @@
 package aoc2023.day08
 
-import aoc2023.day08.DayEight.{ MapOfTheDesert, Turn }
+import aoc2023.day08.DayEight.{MapOfTheDesert, Turn}
 import utils.BaseTest
 
 class DayEightTest extends BaseTest:

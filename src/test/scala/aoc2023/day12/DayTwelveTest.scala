@@ -1,7 +1,7 @@
 package aoc2023.day12
 
 import aoc2023.day12.DayTwelve.Record
-import aoc2023.day12.DayTwelve.Status._
+import aoc2023.day12.DayTwelve.Status.*
 import utils.BaseTest
 
 class DayTwelveTest extends BaseTest:

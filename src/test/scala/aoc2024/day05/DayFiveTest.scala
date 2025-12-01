@@ -4,8 +4,7 @@ import utils.BaseTest
 
 class DayFiveTest extends BaseTest:
 
-  private val input: Seq[String] =
-    """47|53
+  private val input: Seq[String] = """47|53
       |97|13
       |97|61
       |97|47

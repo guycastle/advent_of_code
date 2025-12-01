@@ -43,6 +43,7 @@ object DayFifteen extends DailyChallenge[Int]:
         case '=' | '-' => false
         case _         => true
       Step(label = label, box = label.aocHash, focalLength = op.drop(1).toIntOption)
+    end toStep
   end extension
 
   case class Step(label: String, box: Int, focalLength: Option[Int])

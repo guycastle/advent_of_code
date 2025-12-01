@@ -2,7 +2,7 @@ import org.typelevel.scalacoptions.ScalacOptions
 
 organization := "guycastle"
 name := "aoc"
-scalaVersion := "3.5.2"
+scalaVersion := "3.7.4"
 
 val scalaTestVersion = "3.2.19"
 

@@ -1,11 +1,11 @@
 package aoc2024.day09
 
 import utils.BaseTest
-import utils.Syntax._
+import utils.Syntax.*
 
 class DayNineTest extends BaseTest:
 
-  private final val input: String = "2333133121414131402"
+  final private val input: String = "2333133121414131402"
 
   "Processing input for part one" must:
 

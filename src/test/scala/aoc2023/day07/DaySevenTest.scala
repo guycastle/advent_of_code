@@ -1,6 +1,6 @@
 package aoc2023.day07
 
-import aoc2023.day07.DaySeven.HandType._
+import aoc2023.day07.DaySeven.HandType.*
 import utils.BaseTest
 
 class DaySevenTest extends BaseTest:
@@ -55,6 +55,7 @@ class DaySevenTest extends BaseTest:
           tenth.handType mustBe OnePair
           eleventh.handType mustBe FiveOfAKind
         case other => fail("Parsed input mismatch")
+      end match
 
     "calculate the correct winnings for part one" in:
       DaySeven.partOne(input) mustBe 6440

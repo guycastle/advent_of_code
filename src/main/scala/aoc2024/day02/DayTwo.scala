@@ -1,7 +1,7 @@
 package aoc2024.day02
 
 import utils.DailyChallenge
-import utils.Syntax._
+import utils.Syntax.*
 
 import java.time.LocalDate
 
@@ -25,19 +25,19 @@ object DayTwo extends DailyChallenge[Int]:
     else
       (report.head, report(1)) match
         case (first, second) if first == second => 1.some
-        case (first, second) =>
+        case (first, second)                    =>
           lazy val validDiffs                   = 1 to 3
           val comparison: (Int, Int) => Boolean = if first > second then (_ > _) else (_ < _)
           report.zipWithIndex
             .sliding(2)
             .takeWhile:
-              case (Seq((previous, _), (current, _))) =>
-                comparison(previous, current) && validDiffs.contains(math.abs(previous - current))
+              case (Seq((previous, _), (current, _))) => comparison(previous, current) && validDiffs.contains(math.abs(previous - current))
             .toSeq
             .lastOption match
             case None                                                 => 1.some
             case Some(Seq(_, (_, index))) if index != report.size - 1 => (index + 1).some
             case _                                                    => None
+          end match
 
   private val reportIsSafe: Report => Boolean = reportBecomesUnsafeAtIndex(_).isEmpty
 

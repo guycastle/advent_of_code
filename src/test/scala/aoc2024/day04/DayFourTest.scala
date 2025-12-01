@@ -4,8 +4,7 @@ import utils.BaseTest
 
 class DayFourTest extends BaseTest:
 
-  private val input: Seq[String] =
-    """MMMSXXMASM
+  private val input: Seq[String] = """MMMSXXMASM
       |MSAMXMSMSA
       |AMXSXMAAMM
       |MSAMASMSMX
@@ -16,8 +15,7 @@ class DayFourTest extends BaseTest:
       |MAMMMXMMMM
       |MXMXAXMASX""".stripMargin.linesIterator.toSeq
 
-  private val edgeCase1: Seq[String] =
-    """SXSXXXX
+  private val edgeCase1: Seq[String] = """SXSXXXX
       |XAXXXXX
       |MXMXXXX
       |XAXXXXX
@@ -26,8 +24,7 @@ class DayFourTest extends BaseTest:
       |XAXAXAM
       |SXMXSXM""".stripMargin.linesIterator.toSeq
 
-  private val edgeCase2: Seq[String] =
-    """MXMXMXMXS
+  private val edgeCase2: Seq[String] = """MXMXMXMXS
       |XAXAXASAX
       |SXSXSXMXS""".stripMargin.linesIterator.toSeq
 

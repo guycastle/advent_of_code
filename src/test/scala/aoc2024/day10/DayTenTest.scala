@@ -4,8 +4,7 @@ import utils.BaseTest
 
 class DayTenTest extends BaseTest:
 
-  private final val input: Seq[String] =
-    """89010123
+  final private val input: Seq[String] = """89010123
       |78121874
       |87430965
       |96549874

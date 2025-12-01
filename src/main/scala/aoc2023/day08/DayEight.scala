@@ -9,11 +9,9 @@ object DayEight extends DailyChallenge[BigInt]:
 
   override lazy val day: LocalDate = LocalDate.of(2023, 12, 8)
 
-  override def partOne(input: Seq[String]): BigInt =
-    stepsToNavigateAcrossDesert(map = parseInput(input), startAt = "AAA", endAt = "ZZZ")
+  override def partOne(input: Seq[String]): BigInt = stepsToNavigateAcrossDesert(map = parseInput(input), startAt = "AAA", endAt = "ZZZ")
 
-  override def partTwo(input: Seq[String]): BigInt =
-    stepsToNavigateAcrossDesert(map = parseInput(input), startAt = "A", endAt = "Z")
+  override def partTwo(input: Seq[String]): BigInt = stepsToNavigateAcrossDesert(map = parseInput(input), startAt = "A", endAt = "Z")
 
   @main def run(): Unit = evaluate()
 
@@ -29,17 +27,20 @@ object DayEight extends DailyChallenge[BigInt]:
             turn = map.turns.getTurn(next),
             turnCount = turnCount + 1,
           )
+        end if
       case None => navigate(directions = map.directions, turn = turn, turnCount = turnCount)
 
     lowestCommonMultiplier(map.turns.collect {
       case (key, turn) if key.endsWith(startAt) => navigate(map.directions, turn)
     })
+  end stepsToNavigateAcrossDesert
 
   case class Turn(left: String, right: String):
     lazy val to: Char => String =
       case 'L'   => left
       case 'R'   => right
       case other => throw IllegalArgumentException(s"'$other' is not a valid direction")
+    end to
   end Turn
 
   case class MapOfTheDesert(directions: String, turns: Map[String, Turn])
@@ -47,13 +48,12 @@ object DayEight extends DailyChallenge[BigInt]:
   lazy val lowestCommonMultiplier: Iterable[BigInt] => BigInt = _.reduce(_.lcm(_))
 
   extension (turns: Map[String, Turn])
-    private def getTurn(key: String): Turn =
-      turns.getOrElse(key, throw new IllegalArgumentException(s"Position $key not found in map!"))
+    private def getTurn(key: String): Turn = turns.getOrElse(key, throw new IllegalArgumentException(s"Position $key not found in map!"))
   end extension
 
   extension (bi: BigInt)
     // https://en.wikipedia.org/wiki/Least_common_multiple#Using_the_greatest_common_divisor
-    private def lcm(that: BigInt): BigInt = (bi * that) / (bi gcd that)
+    private def lcm(that: BigInt): BigInt = (bi * that) / (bi.gcd(that))
   end extension
 
   lazy val parseInput: Seq[String] => MapOfTheDesert = input =>
@@ -63,8 +63,7 @@ object DayEight extends DailyChallenge[BigInt]:
       turns = mapLines
         .drop(1)
         .foldLeft(Map.empty[String, Turn]):
-          case (directions, current) =>
-            current match
+          case (directions, current) => current match
               case s"$key = ($leftKey, $rightKey)" => directions.updated(key, Turn(leftKey, rightKey))
               case other                           => throw new IllegalArgumentException(s"Map direction not in expected format: $other"),
     )

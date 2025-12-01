@@ -1,7 +1,7 @@
 package aoc2024.day08
 
 import utils.DailyChallenge
-import utils.Syntax._
+import utils.Syntax.*
 
 import java.time.LocalDate
 import scala.annotation.tailrec
@@ -19,16 +19,18 @@ object DayEight extends DailyChallenge[Int]:
       height = height,
       maxAntinodes = 1.some,
     ).size
+  end partOne
 
   override def partTwo(input: Seq[String]): Int =
     val (width, height) = getWidthAndHeight(input)
     val antennaGroups   = parseInput(input)
-    val antinodes = findAllUniqueAntinodes(
+    val antinodes       = findAllUniqueAntinodes(
       antennaGroups = antennaGroups,
       width = width,
       height = height,
     ) ++ antennaGroups.values.flatten.toSet // add the antenna's themselves to the unique set of positions
     antinodes.size
+  end partTwo
 
   @main def run(): Unit = evaluate()
 
@@ -42,14 +44,12 @@ object DayEight extends DailyChallenge[Int]:
   private def findAllUniqueAntinodes(antennaGroups: Map[Char, Set[Position]], width: Width, height: Height, maxAntinodes: Option[Int] = None): Set[Position] =
 
     @tailrec
-    def calculateAntinode(position: Position, move: Position => Position, antinodes: Set[Position] = Set.empty): Set[Position] =
-      maxAntinodes match
-        case Some(value) if antinodes.size >= value => antinodes
-        case _ =>
-          move(position) match
-            case newPosition @ (x, y) if (0 until width).contains(x) && (0 until height).contains(y) =>
-              calculateAntinode(newPosition, move, antinodes + newPosition)
-            case other => antinodes
+    def calculateAntinode(position: Position, move: Position => Position, antinodes: Set[Position] = Set.empty): Set[Position] = maxAntinodes match
+      case Some(value) if antinodes.size >= value => antinodes
+      case _                                      => move(position) match
+          case newPosition @ (x, y) if (0 until width).contains(x) && (0 until height).contains(y) =>
+            calculateAntinode(newPosition, move, antinodes + newPosition)
+          case other => antinodes
 
     antennaGroups.values.foldLeft(Set.empty): (allAntinodes, antennasInGroup) =>
       antennasInGroup.toSeq
@@ -65,8 +65,7 @@ object DayEight extends DailyChallenge[Int]:
 
   private val parseInput: Seq[String] => AntennaGroups = input =>
     input.zipWithIndex.foldLeft(Map.empty[Char, Set[Position]]):
-      case (map, (row, y)) =>
-        row.zipWithIndex.foldLeft(map):
+      case (map, (row, y)) => row.zipWithIndex.foldLeft(map):
           case (rowMap, (column, x)) if column != '.' => rowMap.updatedWith(column)(_.orElse(Set.empty[Position].some).map(_ + (x -> y)))
           case (rowMap, _)                            => rowMap
   end parseInput

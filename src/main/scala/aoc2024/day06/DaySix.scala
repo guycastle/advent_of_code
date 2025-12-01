@@ -12,6 +12,7 @@ object DaySix extends DailyChallenge[Int]:
   override def partOne(input: Seq[String]): Int =
     val (grid, start, direction) = parseInput(input)
     walkGrid(grid = grid, position = start, move = direction, history = Set(start)).size
+  end partOne
 
   override def partTwo(input: Seq[String]): Int =
     val (grid, start, direction) = parseInput(input)
@@ -25,6 +26,7 @@ object DaySix extends DailyChallenge[Int]:
           move = direction,
           history = Set.empty,
         )
+  end partTwo
 
   @main def run(): Unit = evaluate()
 
@@ -48,12 +50,14 @@ object DaySix extends DailyChallenge[Int]:
     case _: Down  => (0, 1)
     case _: Left  => (-1, 0)
     case _: Right => (1, 0)
+  end directionToMovement
 
   private val rightTurn: PartialFunction[Movement, Movement] =
     case (0, -1) => (1, 0)
     case (1, 0)  => (0, 1)
     case (0, 1)  => (-1, 0)
     case (-1, 0) => (0, -1)
+  end rightTurn
 
   private val parseInput: Seq[String] => (Grid, Position, Movement) = input =>
     input.zipWithIndex.foldLeft((Map.empty[Int, Row], (0, 0), (-1, -1))):
@@ -75,6 +79,8 @@ object DaySix extends DailyChallenge[Int]:
       case Some(_: Obstruction) => walkGrid(grid = grid, position = position, move = rightTurn(move), history = history + position)
       case Some(_)              => walkGrid(grid = grid, position = (nextX, nextY), move = move, history = history + position)
       case None                 => history + position
+    end match
+  end walkGrid
 
   @tailrec
   private def isGridLooping(grid: Grid, position: Position, move: Movement, history: Set[(Position, Movement)]): Boolean =
@@ -86,5 +92,7 @@ object DaySix extends DailyChallenge[Int]:
       case Some(_) if history.contains((position, move)) => true
       case Some(_) => isGridLooping(grid = grid, position = (nextX, nextY), move = move, history = history + ((position, move)))
       case None    => false
+    end match
+  end isGridLooping
 
 end DaySix

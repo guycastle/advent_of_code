@@ -32,10 +32,9 @@ object DaySeven extends DailyChallenge[Long]:
     case s"$value: $numbers" => value.toLongOption.map(v => Equation(value = v, numbers = numbers.split("\\s").toList.flatMap(_.toLongOption)))
     case _                   => None
 
-  private def canBeSolved(equation: Equation, operators: Array[Operator] = Operator.values): Boolean =
-    equation.numbers match
-      case List(a, b)             => operators.exists(op => op.func(a, b) == equation.value)
-      case head :: Nil            => head == equation.value
-      case head :: (next :: tail) => operators.exists(op => canBeSolved(equation.copy(numbers = op.func(head, next) +: tail), operators))
-      case Nil                    => false
+  private def canBeSolved(equation: Equation, operators: Array[Operator] = Operator.values): Boolean = equation.numbers match
+    case List(a, b)             => operators.exists(op => op.func(a, b) == equation.value)
+    case head :: Nil            => head == equation.value
+    case head :: (next :: tail) => operators.exists(op => canBeSolved(equation.copy(numbers = op.func(head, next) +: tail), operators))
+    case Nil                    => false
 end DaySeven

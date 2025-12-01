@@ -15,6 +15,7 @@ object DayEleven extends DailyChallenge[Int]:
       rowOfStones = parseInput(input),
       numberOfBlinks = 25,
     ).size
+  end partOne
 
   override def partTwo(input: Seq[String]): Int = 0
 
@@ -26,18 +27,21 @@ object DayEleven extends DailyChallenge[Int]:
   private type RowOfStones = Seq[Stone]
   private type Rule        = PartialFunction[Stone, RowOfStones]
 
-  private final val rule1: Rule =
+  final private val rule1: Rule =
     case 0 => Seq(1)
+  end rule1
 
-  private final val rule2: Rule =
+  final private val rule2: Rule =
     case x if x.toString.length % 2 == 0 =>
       val str = x.toString
       str.grouped(str.length / 2).toSeq.flatMap(_.toLongOption)
+  end rule2
 
-  private final val rule3: Rule =
+  final private val rule3: Rule =
     case x => Seq(x * 2024)
+  end rule3
 
-  private final val rules = Seq(rule1, rule2)
+  final private val rules = Seq(rule1, rule2)
 
   @tailrec
   def blink(rowOfStones: RowOfStones, numberOfBlinks: Int): RowOfStones =

@@ -10,11 +10,9 @@ object DayEleven extends DailyChallenge[Long]:
 
   override lazy val day: LocalDate = LocalDate.of(2023, 12, 11)
 
-  override def partOne(input: Seq[String]): Long =
-    parseInput(input = input, expandBy = 1).map(distanceBetweenGalaxies).sum
+  override def partOne(input: Seq[String]): Long = parseInput(input = input, expandBy = 1).map(distanceBetweenGalaxies).sum
 
-  override def partTwo(input: Seq[String]): Long =
-    parseInput(input = input, expandBy = 999999).map(distanceBetweenGalaxies).sum
+  override def partTwo(input: Seq[String]): Long = parseInput(input = input, expandBy = 999999).map(distanceBetweenGalaxies).sum
 
   @main def run(): Unit = evaluate()
 
@@ -24,6 +22,7 @@ object DayEleven extends DailyChallenge[Long]:
 
   lazy val distanceBetweenGalaxies: GalaxyPair => Long =
     case (Galaxy(x1, y1), Galaxy(x2, y2)) => abs(x1 - x2) + abs(y1 - y2)
+  end distanceBetweenGalaxies
 
   def parseInput(input: Seq[String], expandBy: Int): Seq[GalaxyPair] =
     val (universe, _) = input.headOption match
@@ -31,7 +30,7 @@ object DayEleven extends DailyChallenge[Long]:
         val verticalEmptySpaceIndices = row.indices.filter(i => !input.exists(_.lift(i).contains('#')))
         input.zipWithIndex.foldLeft((Seq.empty[Galaxy], 0L)):
           case ((galaxies, yOffset), (row, y)) =>
-            val newYOffset = if row.forall(_ == '.') then yOffset + expandBy else yOffset
+            val newYOffset       = if row.forall(_ == '.') then yOffset + expandBy else yOffset
             val (rowGalaxies, _) = row.zipWithIndex.foldLeft((Seq.empty[Galaxy], 0L)):
               case ((rowGalaxies, xOffset), (space, x)) =>
                 if verticalEmptySpaceIndices contains x then (rowGalaxies, xOffset + expandBy)
@@ -50,5 +49,6 @@ object DayEleven extends DailyChallenge[Long]:
       case _ => pairs
 
     pair(universe)
+  end parseInput
 
 end DayEleven

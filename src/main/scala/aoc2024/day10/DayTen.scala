@@ -11,10 +11,12 @@ object DayTen extends DailyChallenge[Int]:
   override def partOne(input: Seq[String]): Int =
     val (map, trailHeads) = parseInput(input)
     trailHeads.map(th => trailScoreBySummits(position = th, map = map).size).sum
+  end partOne
 
   override def partTwo(input: Seq[String]): Int =
     val (map, trailHeads) = parseInput(input)
     trailHeads.map(th => trailScoreByPathCount(position = th, map = map)).sum
+  end partTwo
 
   @main def run(): Unit = evaluate()
 
@@ -43,6 +45,7 @@ object DayTen extends DailyChallenge[Int]:
       case Down  => Seq(Left, Right, Down)
       case Left  => Seq(Up, Down, Left)
       case Right => Seq(Up, Down, Right)
+    end skipOrigin
   end Direction
 
   private def newPositionsAndPotentialDirections(
@@ -50,15 +53,14 @@ object DayTen extends DailyChallenge[Int]:
       currentHeight: Int,
       directions: Seq[Direction],
       map: TopographicalMap,
-  ): Seq[(Position, Seq[Direction])] =
-    directions
-      .foldLeft(Seq.empty[(Position, Seq[Direction])]):
-        case (positionAndDirections, direction) =>
-          val newPosition = direction.move(position)
-          map.heightAt(newPosition) match
-            case Some(height) if height == currentHeight + 1 =>
-              positionAndDirections :+ (newPosition -> Direction.skipOrigin(direction))
-            case _ => positionAndDirections
+  ): Seq[(Position, Seq[Direction])] = directions
+    .foldLeft(Seq.empty[(Position, Seq[Direction])]):
+      case (positionAndDirections, direction) =>
+        val newPosition = direction.move(position)
+        map.heightAt(newPosition) match
+          case Some(height) if height == currentHeight + 1 => positionAndDirections :+ (newPosition -> Direction.skipOrigin(direction))
+          case _                                           => positionAndDirections
+        end match
   end newPositionsAndPotentialDirections
 
   private def trailScoreBySummits(
@@ -71,11 +73,10 @@ object DayTen extends DailyChallenge[Int]:
     if currentHeight == 9 then summits + position
     else
       newPositionsAndPotentialDirections(position = position, currentHeight = currentHeight, directions = directions, map = map) match
-        case Nil => summits
+        case Nil                                     => summits
         case (newPosition, directionsToCheck) :: Nil =>
           trailScoreBySummits(position = newPosition, currentHeight = currentHeight + 1, summits = summits, map = map, directions = directionsToCheck)
-        case newPositions =>
-          newPositions.foldLeft(summits):
+        case newPositions => newPositions.foldLeft(summits):
             case (summits, (newPosition, directionsToCheck)) =>
               trailScoreBySummits(position = newPosition, currentHeight = currentHeight + 1, summits = summits, map = map, directions = directionsToCheck)
   end trailScoreBySummits
@@ -90,11 +91,10 @@ object DayTen extends DailyChallenge[Int]:
     if currentHeight == 9 then count + 1
     else
       newPositionsAndPotentialDirections(position = position, currentHeight = currentHeight, directions = directions, map = map) match
-        case Nil => count
+        case Nil                                     => count
         case (newPosition, directionsToCheck) :: Nil =>
           trailScoreByPathCount(position = newPosition, currentHeight = currentHeight + 1, count = count, map = map, directions = directionsToCheck)
-        case newPositions =>
-          newPositions.foldLeft(count):
+        case newPositions => newPositions.foldLeft(count):
             case (count, (newPosition, directionsToCheck)) =>
               trailScoreByPathCount(position = newPosition, currentHeight = currentHeight + 1, count = count, map = map, directions = directionsToCheck)
   end trailScoreByPathCount

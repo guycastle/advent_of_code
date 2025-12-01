@@ -29,15 +29,14 @@ object DayFive extends DailyChallenge[Long]:
       .sortBy(_.start)
       .foldLeft(Seq.empty[NumericRange[Long]]) { case (ranges, range) =>
         ranges.lastOption match
-          case Some(previous) if previous.end >= range.start =>
-            ranges.updated(ranges.size - 1, (previous.start until range.end))
-          case _ => ranges :+ range
+          case Some(previous) if previous.end >= range.start => ranges.updated(ranges.size - 1, (previous.start until range.end))
+          case _                                             => ranges :+ range
       }
     (ranges, ranges.map(_.length).sum)
 
   def almanacParser(input: Seq[String], seedParser: String => (Seq[SeedType], Long)): Option[Almanac] = input
     .collectFirst { case s"seeds: $numbers" => seedParser(numbers) }
-    .map((seeds, total) => {
+    .map { (seeds, total) =>
       val seedMap     = almanacSectionParser(input = input, key = "seed-to-soil")
       val locationMap = almanacSectionParser(input = input, key = "humidity-to-location")
       Almanac(
@@ -51,7 +50,7 @@ object DayFive extends DailyChallenge[Long]:
         temperaturesToHumidity = almanacSectionParser(input = input, key = "temperature-to-humidity"),
         humidityToLocations = locationMap,
       )
-    })
+    }
 
   @main def run(): Unit = evaluate()
 
@@ -65,18 +64,21 @@ object DayFive extends DailyChallenge[Long]:
                    case (closest, seed: Long) =>
                      val seedLocation = almanac.locationForSeed(seed)
                      if closest.forall(_ > seedLocation) then Some(seedLocation) else closest
-                   case (closest, range: NumericRange[Long]) =>
-                     range.foldLeft(closest) { case (rangeClosest, seed) =>
+                     end if
+                   case (closest, range: NumericRange[Long]) => range.foldLeft(closest) { case (rangeClosest, seed) =>
                        val currentCount = counter.incrementAndGet
                        if currentCount % 1000000 == 0 then
                          println(
                            s"Evaluating seed $seed (${pctFmt.format(counter.incrementAndGet.toDouble / almanac.totalSeeds)})",
                          )
+                       end if
                        val seedLocation = almanac.locationForSeed(seed)
                        if rangeClosest.forall(_ > seedLocation) then Some(seedLocation) else rangeClosest
+                       end if
                      }
                  }
     yield closest).getOrElse(-1)
+  end closestLocation
 
   private lazy val numberRegex: Regex = "[0-9]+".r
 

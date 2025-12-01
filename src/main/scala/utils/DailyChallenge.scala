@@ -1,7 +1,7 @@
 package utils
 
 import java.time.LocalDate
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 trait DailyChallenge[O]:
 
@@ -15,6 +15,7 @@ trait DailyChallenge[O]:
     val readResult = InputReader.readLines(s"inputs/${day.getYear}-${String.format("%02d", day.getDayOfMonth)}.txt")
     printResult(part = "one", readResult = readResult, processInput = partOne)
     printResult(part = "two", readResult = readResult, processInput = partTwo)
+  end evaluate
 
   private def printResult(part: String, readResult: Try[Seq[String]], start: Long = System.currentTimeMillis, processInput: Seq[String] => O): Unit =
     val output =
@@ -24,8 +25,9 @@ trait DailyChallenge[O]:
       yield output
 
     output match
-      case Failure(ex) => println(s"Error while processing input for part $part of day $day: ${ex.getMessage}")
-      case Success(result) =>
-        println(s"The result for part $part of day $day is: $result (took ${System.currentTimeMillis - start}ms)")
+      case Failure(ex)     => println(s"Error while processing input for part $part of day $day: ${ex.getMessage}")
+      case Success(result) => println(s"The result for part $part of day $day is: $result (took ${System.currentTimeMillis - start}ms)")
+    end match
+  end printResult
 
 end DailyChallenge

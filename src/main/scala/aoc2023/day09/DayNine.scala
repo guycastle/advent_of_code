@@ -42,6 +42,8 @@ object DayNine extends DailyChallenge[Int]:
         line = next,
         sequences = (next.headOption ++ next.lastOption).toSeq +: sequences,
       )
+    end if
+  end calculate
 
   def predict(direction: Time, from: HistoricalData): Int = direction.operator(
     calculate(from).flatMap(_.nextIn(direction)).reduce(direction.operator),

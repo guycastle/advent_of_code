@@ -1,6 +1,6 @@
 package aoc2023.day15
 
-import aoc2023.day15.DayFifteen._
+import aoc2023.day15.DayFifteen.*
 import utils.BaseTest
 
 class DayFifteenTest extends BaseTest:
@@ -22,3 +22,4 @@ class DayFifteenTest extends BaseTest:
 
     "correctly calculate the sum of the focusing power for all boxes" in:
       DayFifteen.partTwo(input) mustBe 145
+end DayFifteenTest

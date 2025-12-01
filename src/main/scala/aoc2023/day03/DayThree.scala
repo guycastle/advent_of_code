@@ -41,11 +41,11 @@ object DayThree extends DailyChallenge[Int]:
   private def processRecursivelyForPartOne(
       lines: Seq[String],
       previous: Option[LineScan] = None,
-      current: Option[LineScan] = None,
-      next: Option[LineScan] = None,
+      current: Option[LineScan],
+      next: Option[LineScan],
       result: Int = 0,
   ): Int = current match
-    case None => result
+    case None       => result
     case Some(line) =>
       val partNumberIndices = (
         line.symbolIndices ++
@@ -71,11 +71,11 @@ object DayThree extends DailyChallenge[Int]:
   private def processRecursivelyForPartTwo(
       lines: Seq[String],
       previous: Option[LineScan] = None,
-      current: Option[LineScan] = None,
-      next: Option[LineScan] = None,
+      current: Option[LineScan],
+      next: Option[LineScan],
       result: Int = 0,
   ): Int = current match
-    case None => result
+    case None       => result
     case Some(line) =>
       val gearNumbers = line.symbolIndices
         .map(adjacentIndices)

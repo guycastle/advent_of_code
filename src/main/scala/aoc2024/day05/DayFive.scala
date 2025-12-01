@@ -12,6 +12,7 @@ object DayFive extends DailyChallenge[Int]:
     val (rules, updates) = parseInput(input)
     updates.foldLeft(0): (sum, update) =>
       if isUpdatedOrderedAccordingToTheRules(update, rules) then sum + middlePageNumber(update) else sum
+  end partOne
 
   override def partTwo(input: Seq[String]): Int =
     val (rules, updates) = parseInput(input)
@@ -20,6 +21,7 @@ object DayFive extends DailyChallenge[Int]:
       // sort the rules so they're applied in the right order
       then sum + middlePageNumber(orderUpdate(update, rules.sorted))
       else sum
+  end partTwo
 
   @main def run(): Unit = evaluate()
 
@@ -31,7 +33,7 @@ object DayFive extends DailyChallenge[Int]:
     (
       rules
         .collect:
-          case s"$a|$b" => for { a <- a.toIntOption; b <- b.toIntOption } yield (a, b)
+          case s"$a|$b" => for a <- a.toIntOption; b <- b.toIntOption yield (a, b)
         .flatten,
       updates
         .drop(1) // drop the blank line
@@ -66,6 +68,7 @@ object DayFive extends DailyChallenge[Int]:
           if indexOfFirst > indexOfSecond
           then ordered.patch(indexOfFirst, Nil, 1).patch(indexOfSecond, Seq(first, second), 1)
           else ordered
+          end if
         case (ordered, _) => ordered
   end orderUpdate
 

@@ -3,15 +3,14 @@ package aoc2023.day06
 import utils.DailyChallenge
 
 import java.time.LocalDate
-import scala.annotation.{ tailrec, unused }
+import scala.annotation.{tailrec, unused}
 import scala.util.matching.Regex
 
 object DaySix extends DailyChallenge[Long]:
 
   override lazy val day: LocalDate = LocalDate.of(2023, 12, 6)
 
-  override def partOne(input: Seq[String]): Long =
-    extractTimeAndDistance[Seq[Race]](parseInputPartOne)(input).map(waysToBeatRecord).product
+  override def partOne(input: Seq[String]): Long = extractTimeAndDistance[Seq[Race]](parseInputPartOne)(input).map(waysToBeatRecord).product
 
   override def partTwo(input: Seq[String]): Long = waysToBeatRecord(extractTimeAndDistance(parseInputPartTwo)(input))
 
@@ -40,11 +39,12 @@ object DaySix extends DailyChallenge[Long]:
   def extractTimeAndDistance[R](toRace: (String, String) => R): Seq[String] => R =
     case Seq(time, distance) => toRace(time, distance)
     case other               => throw new IllegalArgumentException(s"Invalid number of lines in input $other")
+  end extractTimeAndDistance
 
   lazy val parseInputPartTwo: (String, String) => Race =
     (time, distance) => Race(time = time.filter(_.isDigit).toLong, distance = distance.filter(_.isDigit).toLong)
 
-  lazy val parseInputPartOne: (String, String) => Seq[Race] = (time, distance) =>
-    numberRegex.findAllIn(time).zip(numberRegex.findAllIn(distance)).toSeq.map((t, d) => Race(t.toLong, d.toLong))
+  lazy val parseInputPartOne: (String, String) => Seq[Race] =
+    (time, distance) => numberRegex.findAllIn(time).zip(numberRegex.findAllIn(distance)).toSeq.map((t, d) => Race(t.toLong, d.toLong))
 
 end DaySix

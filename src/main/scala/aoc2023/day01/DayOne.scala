@@ -33,7 +33,7 @@ object DayOne extends DailyChallenge[Int]:
 
   private lazy val calibrationValuePart2: String => Int = str =>
     numberRegex.findAllIn(str).matchData.toSeq.map(_.group(1)) match
-      case digits if digits.isEmpty => 0
+      case digits if digits.isEmpty   => 0
       case digits if digits.size == 1 =>
         val digit = matchToInt(digits.head)
         (digit * 10) + digit
