@@ -17,6 +17,6 @@ class DayThreeTest extends BaseTest:
   "Parsed input in part two" must:
 
     "calculate the correct output" in:
-      DayThree.partTwo(input) mustBe 0
+      DayThree.partTwo(input) mustBe 3121910778619L
 
 end DayThreeTest
