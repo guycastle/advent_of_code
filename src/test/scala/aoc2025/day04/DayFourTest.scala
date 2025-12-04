@@ -24,6 +24,6 @@ class DayFourTest extends BaseTest:
   "Parsed input in part two" must:
 
     "calculate the correct output" in:
-      DayFour.partTwo(input) mustBe 0
+      DayFour.partTwo(input) mustBe 43
 
 end DayFourTest
