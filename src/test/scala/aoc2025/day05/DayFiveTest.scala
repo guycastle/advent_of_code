@@ -25,6 +25,6 @@ class DayFiveTest extends BaseTest:
   "Parsed input in part two" must:
 
     "calculate the correct output" in:
-      DayFive.partTwo(input) mustBe 0
+      DayFive.partTwo(input) mustBe 14
 
 end DayFiveTest
