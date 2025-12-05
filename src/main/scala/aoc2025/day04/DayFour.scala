@@ -18,7 +18,7 @@ object DayFour extends DailyChallenge[Int]:
 
   @main def run(): Unit = evaluate()
 
-  enum Move(val move: Coordinate => Coordinate):
+  private enum Move(val move: Coordinate => Coordinate):
     case Up extends Move(move = c => (c.x, c.y - 1))
     case UpRight extends Move(move = c => (c.x + 1, c.y - 1))
     case Right extends Move(move = c => (c.x + 1, c.y))
