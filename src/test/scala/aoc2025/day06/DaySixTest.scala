@@ -8,7 +8,7 @@ class DaySixTest extends BaseTest:
                                      | 45 64  387 23 
                                      |  6 98  215 314
                                      |*   +   *   +  
-                                     |""".stripMargin.split("\n").map(_.strip).toIndexedSeq
+                                     |""".stripMargin.split("\n").toIndexedSeq
 
   "Parsed input in part one" must:
 
@@ -18,6 +18,6 @@ class DaySixTest extends BaseTest:
   "Parsed input in part two" must:
 
     "calculate the correct output" in:
-      DaySix.partTwo(input) mustBe 0
+      DaySix.partTwo(input) mustBe 3263827
 
 end DaySixTest

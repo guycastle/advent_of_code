@@ -26,6 +26,11 @@ trait Syntax:
   end extension
 
   extension [A](iterable: Iterable[A])
+    def splitBy(predicate: A => Boolean): Seq[Seq[A]] =
+      val (split, last) = iterable.foldLeft((Seq.empty[Seq[A]], Seq.empty[A])):
+        case ((acc, curr), el) => if predicate(el) then (acc :+ curr, Seq.empty) else (acc, curr :+ el)
+      split :+ last
+    end splitBy
     def foldLeftWhile[B](initialValue: B)(predicate: (A, B) => Boolean)(function: (A, B) => B): B =
       @tailrec
       def loop(remaining: Iterable[A] = iterable, accumulator: B = initialValue): B = remaining.headOption match
