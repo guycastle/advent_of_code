@@ -30,6 +30,6 @@ class DaySevenTest extends BaseTest:
   "Parsed input in part two" must:
 
     "calculate the correct output" in:
-      DaySeven.partTwo(input) mustBe 0
+      DaySeven.partTwo(input) mustBe 40
 
 end DaySevenTest
