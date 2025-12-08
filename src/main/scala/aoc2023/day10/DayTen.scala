@@ -92,26 +92,28 @@ object DayTen extends DailyChallenge[Int]:
   end parseInput
 
   @tailrec
-  private def mapLoop(terrain: Terrain, tile: Option[Tile] = None, origin: Option[Direction] = None): Terrain = (tile, origin) match
-    case (Some(current), _) if current.loop => terrain // we're back to our starting point
-    case (Some(current), Some(from))        =>
-      val direction = current.tileType.ports
-        .filterNot(_ == from)
-        .headOption
-        .getOrElse(throw new IllegalArgumentException("Got nowhere to go!"))
-      mapLoop(
-        terrain = terrain.update(current.copy(loop = true)),
-        tile = terrain.get(direction.move(current.coords)),
-        origin = Some(direction.opposite),
-      )
-    case _ =>
-      val startingPoint = terrain.start
-      val direction     = startingPoint.tileType.ports.headOption.getOrElse(throw new IllegalArgumentException("Got nowhere to go!"))
-      mapLoop(
-        terrain = terrain.update(startingPoint),
-        tile = terrain.get(direction.move(startingPoint.coords)),
-        origin = Some(direction.opposite),
-      )
+  private def mapLoop(terrain: Terrain, tile: Option[Tile] = None, origin: Option[Direction] = None): Terrain =
+    (tile, origin) match
+      case (Some(current), _) if current.loop => terrain // we're back to our starting point
+      case (Some(current), Some(from))        =>
+        val direction = current.tileType.ports
+          .filterNot(_ == from)
+          .headOption
+          .getOrElse(throw new IllegalArgumentException("Got nowhere to go!"))
+        mapLoop(
+          terrain = terrain.update(current.copy(loop = true)),
+          tile = terrain.get(direction.move(current.coords)),
+          origin = Some(direction.opposite),
+        )
+      case _ =>
+        val startingPoint = terrain.start
+        val direction     =
+          startingPoint.tileType.ports.headOption.getOrElse(throw new IllegalArgumentException("Got nowhere to go!"))
+        mapLoop(
+          terrain = terrain.update(startingPoint),
+          tile = terrain.get(direction.move(startingPoint.coords)),
+          origin = Some(direction.opposite),
+        )
   end mapLoop
 
   @tailrec
@@ -122,7 +124,7 @@ object DayTen extends DailyChallenge[Int]:
       val (skip, toCheck)                        = row.span(!isSouthBoundLoop(_))
       val updatedProcessed                       = (processed ++ skip) ++ toCheck.headOption
       val (enclosedPart, remnant)                = toCheck.drop(1).span(!isSouthBoundLoop(_))
-      val enclosedCount                          = if updatedProcessed.count(isSouthBoundLoop) % 2 != 0 then enclosedPart.count(!_.loop) else 0
+      val enclosedCount = if updatedProcessed.count(isSouthBoundLoop) % 2 != 0 then enclosedPart.count(!_.loop) else 0
       countEnclosed(remnant, enclosedCount + enclosed, updatedProcessed)
   end countEnclosed
 

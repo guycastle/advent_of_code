@@ -41,10 +41,17 @@ object DayEight extends DailyChallenge[Int]:
   private type Width  = Int
   private type Height = Int
 
-  private def findAllUniqueAntinodes(antennaGroups: Map[Char, Set[Position]], width: Width, height: Height, maxAntinodes: Option[Int] = None): Set[Position] =
+  private def findAllUniqueAntinodes(
+      antennaGroups: Map[Char, Set[Position]],
+      width: Width,
+      height: Height,
+      maxAntinodes: Option[Int] = None): Set[Position] =
 
     @tailrec
-    def calculateAntinode(position: Position, move: Position => Position, antinodes: Set[Position] = Set.empty): Set[Position] = maxAntinodes match
+    def calculateAntinode(
+        position: Position,
+        move: Position => Position,
+        antinodes: Set[Position] = Set.empty): Set[Position] = maxAntinodes match
       case Some(value) if antinodes.size >= value => antinodes
       case _                                      => move(position) match
           case newPosition @ (x, y) if (0 until width).contains(x) && (0 until height).contains(y) =>
@@ -66,10 +73,12 @@ object DayEight extends DailyChallenge[Int]:
   private val parseInput: Seq[String] => AntennaGroups = input =>
     input.zipWithIndex.foldLeft(Map.empty[Char, Set[Position]]):
       case (map, (row, y)) => row.zipWithIndex.foldLeft(map):
-          case (rowMap, (column, x)) if column != '.' => rowMap.updatedWith(column)(_.orElse(Set.empty[Position].some).map(_ + (x -> y)))
-          case (rowMap, _)                            => rowMap
+          case (rowMap, (column, x)) if column != '.' =>
+            rowMap.updatedWith(column)(_.orElse(Set.empty[Position].some).map(_ + (x -> y)))
+          case (rowMap, _) => rowMap
   end parseInput
 
-  private val getWidthAndHeight: Seq[String] => (Width, Height) = input => (input.headOption.map(_.length).getOrElse(0), input.size)
+  private val getWidthAndHeight: Seq[String] => (Width, Height) =
+    input => (input.headOption.map(_.length).getOrElse(0), input.size)
 
 end DayEight

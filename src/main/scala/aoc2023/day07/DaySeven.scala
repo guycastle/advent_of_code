@@ -9,15 +9,19 @@ object DaySeven extends DailyChallenge[Int]:
 
   override lazy val day: LocalDate = LocalDate.of(2023, 12, 7)
 
-  override def partOne(input: Seq[String]): Int = input.map(parseInput(1, _)).sorted.zipWithIndex.map((hand, idx) => hand.bid * (idx + 1)).sum
+  override def partOne(input: Seq[String]): Int =
+    input.map(parseInput(1, _)).sorted.zipWithIndex.map((hand, idx) => hand.bid * (idx + 1)).sum
 
-  override def partTwo(input: Seq[String]): Int = input.map(parseInput(2, _)).sorted.zipWithIndex.map((hand, idx) => hand.bid * (idx + 1)).sum
+  override def partTwo(input: Seq[String]): Int =
+    input.map(parseInput(2, _)).sorted.zipWithIndex.map((hand, idx) => hand.bid * (idx + 1)).sum
 
   @main def run(): Unit = evaluate()
 
-  lazy val cardMapPart1: Map[Char, Int] = Seq('A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2').reverse.zipWithIndex.toMap
+  lazy val cardMapPart1: Map[Char, Int] =
+    Seq('A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2').reverse.zipWithIndex.toMap
 
-  lazy val cardMapPart2: Map[Char, Int] = Seq('A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J').reverse.zipWithIndex.toMap
+  lazy val cardMapPart2: Map[Char, Int] =
+    Seq('A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J').reverse.zipWithIndex.toMap
 
   enum HandType(val id: Int):
     case FiveOfAKind extends HandType(id = 6)
@@ -67,10 +71,11 @@ object DaySeven extends DailyChallenge[Int]:
   end Hand
 
   def parseInput(part: Int, line: String): Hand =
-    val (cardMap, eval) = if part == 1 then (cardMapPart1, determineTypePartOne) else (cardMapPart2, determineTypePartTwo)
-    val (cards, bid)    = line.span(!_.isWhitespace)
-    val cardNumbers     = cards.flatMap(cardMap.get)
-    val cardCounts      = countCards(cardNumbers)
+    val (cardMap, eval) =
+      if part == 1 then (cardMapPart1, determineTypePartOne) else (cardMapPart2, determineTypePartTwo)
+    val (cards, bid) = line.span(!_.isWhitespace)
+    val cardNumbers  = cards.flatMap(cardMap.get)
+    val cardCounts   = countCards(cardNumbers)
 
     Hand(cards = cardNumbers, bid = bid.strip.toInt, handType = eval(cardCounts))
   end parseInput

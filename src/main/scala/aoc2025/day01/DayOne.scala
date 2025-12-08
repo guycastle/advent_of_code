@@ -52,12 +52,14 @@ object DayOne extends DailyChallenge[Int]:
   end Rotation
 
   @tailrec
-  private def processRotations(rotations: Seq[Rotation], position: Int = 50, results: Seq[RotationResult] = Seq.empty): Seq[RotationResult] =
-    rotations.headOption match
-      case Some(rotation) =>
-        val result = rotation.rotate(position)
-        processRotations(rotations.tail, result.position, results :+ result)
-      case None => results
+  private def processRotations(
+      rotations: Seq[Rotation],
+      position: Int = 50,
+      results: Seq[RotationResult] = Seq.empty): Seq[RotationResult] = rotations.headOption match
+    case Some(rotation) =>
+      val result = rotation.rotate(position)
+      processRotations(rotations.tail, result.position, results :+ result)
+    case None => results
   end processRotations
 
   lazy val parseInput: Seq[String] => Try[Seq[Rotation]] = _.toTryIterable:

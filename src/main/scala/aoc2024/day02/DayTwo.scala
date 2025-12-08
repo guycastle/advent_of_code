@@ -31,7 +31,8 @@ object DayTwo extends DailyChallenge[Int]:
           report.zipWithIndex
             .sliding(2)
             .takeWhile:
-              case (Seq((previous, _), (current, _))) => comparison(previous, current) && validDiffs.contains(math.abs(previous - current))
+              case (Seq((previous, _), (current, _))) =>
+                comparison(previous, current) && validDiffs.contains(math.abs(previous - current))
             .toSeq
             .lastOption match
             case None                                                 => 1.some

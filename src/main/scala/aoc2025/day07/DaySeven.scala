@@ -32,30 +32,37 @@ object DaySeven extends DailyChallenge[Long]:
   end startingPoint
 
   @tailrec
-  private def splitBeams(indices: Set[Int], currentRow: Int, manifold: List[String], splitterCoordinates: Set[Coordinate] = Set.empty): Set[Coordinate] =
-    manifold match
-      case Nil          => splitterCoordinates
-      case head :: tail =>
-        val (updatedSplitterCoordinates, updatedIndices) = indices.foldLeft((splitterCoordinates, Set.empty[Int])):
-          case ((splitters, newIndices), xIdx) => head.lift(xIdx) match
-              case Some(_: Splitter) => (splitters + Coordinate(xIdx, currentRow), newIndices ++ Set(xIdx - 1, xIdx + 1))
-              case Some(_: Empty)    => (splitters, newIndices + xIdx)
-              case _                 => (splitters, newIndices)
-        splitBeams(updatedIndices, currentRow + 1, tail, updatedSplitterCoordinates)
+  private def splitBeams(
+      indices: Set[Int],
+      currentRow: Int,
+      manifold: List[String],
+      splitterCoordinates: Set[Coordinate] = Set.empty): Set[Coordinate] = manifold match
+    case Nil          => splitterCoordinates
+    case head :: tail =>
+      val (updatedSplitterCoordinates, updatedIndices) = indices.foldLeft((splitterCoordinates, Set.empty[Int])):
+        case ((splitters, newIndices), xIdx) => head.lift(xIdx) match
+            case Some(_: Splitter) => (splitters + Coordinate(xIdx, currentRow), newIndices ++ Set(xIdx - 1, xIdx + 1))
+            case Some(_: Empty)    => (splitters, newIndices + xIdx)
+            case _                 => (splitters, newIndices)
+      splitBeams(updatedIndices, currentRow + 1, tail, updatedSplitterCoordinates)
 
-  private def acrossTheMultiverse(position: Coordinate, manifold: List[String], cache: Map[Coordinate, Long] = Map.empty): ResultAndCache =
-    cache.get(position) match
-      case Some(result) => (result, cache)
-      case None         => manifold match
-          case head :: tail => head.lift(position.x) match
-              case Some(_: Splitter) =>
-                val (leftResult, updatedLeftCache) = acrossTheMultiverse(position.copy(x = position.x - 1, position.y + 1), tail, cache)
-                val (rightResult, updatedCache)    = acrossTheMultiverse(position.copy(x = position.x + 1, position.y + 1), tail, updatedLeftCache)
-                (leftResult + rightResult, updatedCache)
-              case Some(_) =>
-                val (result, updatedCache) = acrossTheMultiverse(position.copy(y = position.y + 1), tail, cache)
-                (result, updatedCache + (position -> result))
-              case None => (0, cache)
-          case Nil => (1, cache)
+  private def acrossTheMultiverse(
+      position: Coordinate,
+      manifold: List[String],
+      cache: Map[Coordinate, Long] = Map.empty): ResultAndCache = cache.get(position) match
+    case Some(result) => (result, cache)
+    case None         => manifold match
+        case head :: tail => head.lift(position.x) match
+            case Some(_: Splitter) =>
+              val (leftResult, updatedLeftCache) =
+                acrossTheMultiverse(position.copy(x = position.x - 1, position.y + 1), tail, cache)
+              val (rightResult, updatedCache) =
+                acrossTheMultiverse(position.copy(x = position.x + 1, position.y + 1), tail, updatedLeftCache)
+              (leftResult + rightResult, updatedCache)
+            case Some(_) =>
+              val (result, updatedCache) = acrossTheMultiverse(position.copy(y = position.y + 1), tail, cache)
+              (result, updatedCache + (position -> result))
+            case None => (0, cache)
+        case Nil => (1, cache)
   end acrossTheMultiverse
 end DaySeven

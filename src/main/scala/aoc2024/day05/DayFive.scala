@@ -44,7 +44,9 @@ object DayFive extends DailyChallenge[Int]:
   private val middlePageNumber: SafetyManualPagesUpdate => Int = update => update.lift(update.length / 2).getOrElse(0)
 
   @tailrec
-  private def isUpdatedOrderedAccordingToTheRules(update: SafetyManualPagesUpdate, rules: Seq[PageOrderingRule]): Boolean =
+  private def isUpdatedOrderedAccordingToTheRules(
+      update: SafetyManualPagesUpdate,
+      rules: Seq[PageOrderingRule]): Boolean =
     if update.isEmpty
     then true
     else
@@ -54,8 +56,9 @@ object DayFive extends DailyChallenge[Int]:
           // rule is not applicable to update, move on to the next one
           if rules.size == 1 then true else isUpdatedOrderedAccordingToTheRules(update, rules.tail)
         case Some((firstIndex, secondIndex)) if rules.size == 1          => firstIndex < secondIndex
-        case Some((firstIndex, secondIndex)) if firstIndex < secondIndex => isUpdatedOrderedAccordingToTheRules(update, rules.tail)
-        case _                                                           => false
+        case Some((firstIndex, secondIndex)) if firstIndex < secondIndex =>
+          isUpdatedOrderedAccordingToTheRules(update, rules.tail)
+        case _ => false
   end isUpdatedOrderedAccordingToTheRules
 
   private def orderUpdate(update: SafetyManualPagesUpdate, rules: Seq[PageOrderingRule]): SafetyManualPagesUpdate =

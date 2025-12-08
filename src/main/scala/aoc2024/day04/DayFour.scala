@@ -20,9 +20,13 @@ object DayFour extends DailyChallenge[Int]:
   private type Direction = (Int, Int)
   private type Grid      = Seq[Seq[Square]]
 
-  val parseInput: Seq[String] => Grid = _.zipWithIndex.map((str, y) => str.toIndexedSeq.zipWithIndex.map((char, x) => Square(char = char, x = x, y = y)))
+  val parseInput: Seq[String] => Grid =
+    _.zipWithIndex.map((str, y) => str.toIndexedSeq.zipWithIndex.map((char, x) => Square(char = char, x = x, y = y)))
 
-  private def possibleDirections(grid: Grid, square: Square, filterOpt: Option[Direction => Boolean] = None): Seq[Direction] = (
+  private def possibleDirections(
+      grid: Grid,
+      square: Square,
+      filterOpt: Option[Direction => Boolean] = None): Seq[Direction] = (
     for
       horizontal <- square.x match
                       case 0                                                => Seq(0, 1)
@@ -43,8 +47,9 @@ object DayFour extends DailyChallenge[Int]:
     word.headOption match
       case Some(char) if word.length == 1 => nextSquareOpt.exists(_.char == char)
       case Some(char)                     => nextSquareOpt match
-          case Some(nextSquare) if nextSquare.char == char => lookupWordInDirection(grid = grid, square = nextSquare, direction = direction, word = word.tail)
-          case _                                           => false
+          case Some(nextSquare) if nextSquare.char == char =>
+            lookupWordInDirection(grid = grid, square = nextSquare, direction = direction, word = word.tail)
+          case _ => false
       case None => false
     end match
   end lookupWordInDirection
@@ -58,7 +63,8 @@ object DayFour extends DailyChallenge[Int]:
     grid.foldLeft(0): (total, row) =>
       total + row.foldLeft(0):
         case (rowTotal, square) if square.char == 'X' =>
-          rowTotal + possibleDirections(grid, square).count(direction => lookupWordInDirection(grid = grid, square = square, direction = direction))
+          rowTotal + possibleDirections(grid, square)
+            .count(direction => lookupWordInDirection(grid = grid, square = square, direction = direction))
         case (rowTotal, _) => rowTotal
   end findAllXmassesForPartOne
 
@@ -98,7 +104,10 @@ object DayFour extends DailyChallenge[Int]:
                   lookupWordInDirection(
                     grid = grid,
                     square = otherStartingPoint,
-                    direction = crossDirection(startingPoint = square, direction = direction, otherStartingPoint = otherStartingPoint),
+                    direction = crossDirection(startingPoint = square,
+                                               direction = direction,
+                                               otherStartingPoint = otherStartingPoint,
+                    ),
                     word = "AS",
                   )
             else false

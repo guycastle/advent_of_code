@@ -29,8 +29,9 @@ object DayFive extends DailyChallenge[Long]:
       .sortBy(_.start)
       .foldLeft(Seq.empty[NumericRange[Long]]) { case (ranges, range) =>
         ranges.lastOption match
-          case Some(previous) if previous.end >= range.start => ranges.updated(ranges.size - 1, (previous.start until range.end))
-          case _                                             => ranges :+ range
+          case Some(previous) if previous.end >= range.start =>
+            ranges.updated(ranges.size - 1, (previous.start until range.end))
+          case _ => ranges :+ range
       }
     (ranges, ranges.map(_.length).sum)
 

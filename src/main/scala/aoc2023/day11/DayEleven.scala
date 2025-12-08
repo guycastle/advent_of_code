@@ -10,9 +10,11 @@ object DayEleven extends DailyChallenge[Long]:
 
   override lazy val day: LocalDate = LocalDate.of(2023, 12, 11)
 
-  override def partOne(input: Seq[String]): Long = parseInput(input = input, expandBy = 1).map(distanceBetweenGalaxies).sum
+  override def partOne(input: Seq[String]): Long =
+    parseInput(input = input, expandBy = 1).map(distanceBetweenGalaxies).sum
 
-  override def partTwo(input: Seq[String]): Long = parseInput(input = input, expandBy = 999999).map(distanceBetweenGalaxies).sum
+  override def partTwo(input: Seq[String]): Long =
+    parseInput(input = input, expandBy = 999999).map(distanceBetweenGalaxies).sum
 
   @main def run(): Unit = evaluate()
 

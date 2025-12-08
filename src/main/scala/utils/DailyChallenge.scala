@@ -17,7 +17,11 @@ trait DailyChallenge[O]:
     printResult(part = "two", readResult = readResult, processInput = partTwo)
   end evaluate
 
-  private def printResult(part: String, readResult: Try[Seq[String]], start: Long = System.currentTimeMillis, processInput: Seq[String] => O): Unit =
+  private def printResult(
+      part: String,
+      readResult: Try[Seq[String]],
+      start: Long = System.currentTimeMillis,
+      processInput: Seq[String] => O): Unit =
     val output =
       for
         input  <- readResult
@@ -26,7 +30,8 @@ trait DailyChallenge[O]:
 
     output match
       case Failure(ex)     => println(s"Error while processing input for part $part of day $day: ${ex.getMessage}")
-      case Success(result) => println(s"The result for part $part of day $day is: $result (took ${System.currentTimeMillis - start}ms)")
+      case Success(result) =>
+        println(s"The result for part $part of day $day is: $result (took ${System.currentTimeMillis - start}ms)")
     end match
   end printResult
 

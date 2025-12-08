@@ -8,8 +8,9 @@ object DayFourteen extends DailyChallenge[Int]:
 
   override lazy val day: LocalDate = LocalDate.of(2023, 12, 14)
 
-  override def partOne(input: Seq[String]): Int = moveRoundedRocksUp(parseInput(input)).reverse.zipWithIndex.foldLeft(0):
-    case (total, (row, i)) => total + row.values.count(_.rock == Rock.Round) * (i + 1)
+  override def partOne(input: Seq[String]): Int =
+    moveRoundedRocksUp(parseInput(input)).reverse.zipWithIndex.foldLeft(0):
+      case (total, (row, i)) => total + row.values.count(_.rock == Rock.Round) * (i + 1)
 
   override def partTwo(input: Seq[String]): Int = 0
 
@@ -41,7 +42,8 @@ object DayFourteen extends DailyChallenge[Int]:
       tile.coords.y,
       array.lift(tile.coords.y).getOrElse(Map.empty).updated(tile.coords.x, tile),
     )
-    def move(tile: Tile, coords: Coords): DishArray = if tile.coords == coords then array else array.remove(tile).insert(tile.copy(coords = coords))
+    def move(tile: Tile, coords: Coords): DishArray =
+      if tile.coords == coords then array else array.remove(tile).insert(tile.copy(coords = coords))
   end extension
 
   lazy val parseInput: Seq[String] => DishArray = lines =>
@@ -61,9 +63,10 @@ object DayFourteen extends DailyChallenge[Int]:
       case (updatedArray, row) => row.foldLeft(updatedArray):
           case (dish, (_, tile)) if tile.rock == Rock.Round =>
             dish.slice(0, tile.coords.y).flatMap(_.get(tile.coords.x)).lastOption match
-              case Some(block) if block.coords.y + 1 != tile.coords.y => dish.move(tile = tile, coords = block.coords.go(Direction.Down))
-              case None if tile.coords.y != 0                         => dish.move(tile = tile, coords = tile.coords.copy(y = 0))
-              case _                                                  => dish
+              case Some(block) if block.coords.y + 1 != tile.coords.y =>
+                dish.move(tile = tile, coords = block.coords.go(Direction.Down))
+              case None if tile.coords.y != 0 => dish.move(tile = tile, coords = tile.coords.copy(y = 0))
+              case _                          => dish
           case (dish, _) => dish
 
 end DayFourteen

@@ -58,8 +58,9 @@ object DayTen extends DailyChallenge[Int]:
       case (positionAndDirections, direction) =>
         val newPosition = direction.move(position)
         map.heightAt(newPosition) match
-          case Some(height) if height == currentHeight + 1 => positionAndDirections :+ (newPosition -> Direction.skipOrigin(direction))
-          case _                                           => positionAndDirections
+          case Some(height) if height == currentHeight + 1 =>
+            positionAndDirections :+ (newPosition -> Direction.skipOrigin(direction))
+          case _ => positionAndDirections
         end match
   end newPositionsAndPotentialDirections
 
@@ -72,13 +73,25 @@ object DayTen extends DailyChallenge[Int]:
   ): Set[Position] =
     if currentHeight == 9 then summits + position
     else
-      newPositionsAndPotentialDirections(position = position, currentHeight = currentHeight, directions = directions, map = map) match
+      newPositionsAndPotentialDirections(position = position,
+                                         currentHeight = currentHeight,
+                                         directions = directions,
+                                         map = map,
+      ) match
         case Nil                                     => summits
-        case (newPosition, directionsToCheck) :: Nil =>
-          trailScoreBySummits(position = newPosition, currentHeight = currentHeight + 1, summits = summits, map = map, directions = directionsToCheck)
+        case (newPosition, directionsToCheck) :: Nil => trailScoreBySummits(position = newPosition,
+                                                                            currentHeight = currentHeight + 1,
+                                                                            summits = summits,
+                                                                            map = map,
+                                                                            directions = directionsToCheck,
+          )
         case newPositions => newPositions.foldLeft(summits):
-            case (summits, (newPosition, directionsToCheck)) =>
-              trailScoreBySummits(position = newPosition, currentHeight = currentHeight + 1, summits = summits, map = map, directions = directionsToCheck)
+            case (summits, (newPosition, directionsToCheck)) => trailScoreBySummits(position = newPosition,
+                                                                                    currentHeight = currentHeight + 1,
+                                                                                    summits = summits,
+                                                                                    map = map,
+                                                                                    directions = directionsToCheck,
+              )
   end trailScoreBySummits
 
   private def trailScoreByPathCount(
@@ -90,22 +103,35 @@ object DayTen extends DailyChallenge[Int]:
   ): Int =
     if currentHeight == 9 then count + 1
     else
-      newPositionsAndPotentialDirections(position = position, currentHeight = currentHeight, directions = directions, map = map) match
+      newPositionsAndPotentialDirections(position = position,
+                                         currentHeight = currentHeight,
+                                         directions = directions,
+                                         map = map,
+      ) match
         case Nil                                     => count
-        case (newPosition, directionsToCheck) :: Nil =>
-          trailScoreByPathCount(position = newPosition, currentHeight = currentHeight + 1, count = count, map = map, directions = directionsToCheck)
+        case (newPosition, directionsToCheck) :: Nil => trailScoreByPathCount(position = newPosition,
+                                                                              currentHeight = currentHeight + 1,
+                                                                              count = count,
+                                                                              map = map,
+                                                                              directions = directionsToCheck,
+          )
         case newPositions => newPositions.foldLeft(count):
-            case (count, (newPosition, directionsToCheck)) =>
-              trailScoreByPathCount(position = newPosition, currentHeight = currentHeight + 1, count = count, map = map, directions = directionsToCheck)
+            case (count, (newPosition, directionsToCheck)) => trailScoreByPathCount(position = newPosition,
+                                                                                    currentHeight = currentHeight + 1,
+                                                                                    count = count,
+                                                                                    map = map,
+                                                                                    directions = directionsToCheck,
+              )
   end trailScoreByPathCount
 
-  private val parseInput: Seq[String] => (TopographicalMap, Seq[Position]) = _.zipWithIndex.foldLeft((TopographicalMap.empty, Seq.empty[Position])):
-    case ((map, heads), (row, y)) =>
-      val (parsedRow, trailHeads) = row.zipWithIndex.foldLeft((Seq.empty[Int], heads)):
-        case ((map, heads), (c, x)) =>
-          val height = c.asDigit
-          (map :+ height, if height == 0 then heads :+ (x, y) else heads)
-      (map :+ parsedRow, trailHeads)
+  private val parseInput: Seq[String] => (TopographicalMap, Seq[Position]) =
+    _.zipWithIndex.foldLeft((TopographicalMap.empty, Seq.empty[Position])):
+      case ((map, heads), (row, y)) =>
+        val (parsedRow, trailHeads) = row.zipWithIndex.foldLeft((Seq.empty[Int], heads)):
+          case ((map, heads), (c, x)) =>
+            val height = c.asDigit
+            (map :+ height, if height == 0 then heads :+ (x, y) else heads)
+        (map :+ parsedRow, trailHeads)
   end parseInput
 
 end DayTen

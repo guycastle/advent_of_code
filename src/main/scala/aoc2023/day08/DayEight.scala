@@ -9,9 +9,11 @@ object DayEight extends DailyChallenge[BigInt]:
 
   override lazy val day: LocalDate = LocalDate.of(2023, 12, 8)
 
-  override def partOne(input: Seq[String]): BigInt = stepsToNavigateAcrossDesert(map = parseInput(input), startAt = "AAA", endAt = "ZZZ")
+  override def partOne(input: Seq[String]): BigInt =
+    stepsToNavigateAcrossDesert(map = parseInput(input), startAt = "AAA", endAt = "ZZZ")
 
-  override def partTwo(input: Seq[String]): BigInt = stepsToNavigateAcrossDesert(map = parseInput(input), startAt = "A", endAt = "Z")
+  override def partTwo(input: Seq[String]): BigInt =
+    stepsToNavigateAcrossDesert(map = parseInput(input), startAt = "A", endAt = "Z")
 
   @main def run(): Unit = evaluate()
 
@@ -48,7 +50,8 @@ object DayEight extends DailyChallenge[BigInt]:
   lazy val lowestCommonMultiplier: Iterable[BigInt] => BigInt = _.reduce(_.lcm(_))
 
   extension (turns: Map[String, Turn])
-    private def getTurn(key: String): Turn = turns.getOrElse(key, throw new IllegalArgumentException(s"Position $key not found in map!"))
+    private def getTurn(key: String): Turn =
+      turns.getOrElse(key, throw new IllegalArgumentException(s"Position $key not found in map!"))
   end extension
 
   extension (bi: BigInt)
@@ -65,7 +68,7 @@ object DayEight extends DailyChallenge[BigInt]:
         .foldLeft(Map.empty[String, Turn]):
           case (directions, current) => current match
               case s"$key = ($leftKey, $rightKey)" => directions.updated(key, Turn(leftKey, rightKey))
-              case other                           => throw new IllegalArgumentException(s"Map direction not in expected format: $other"),
+              case other => throw new IllegalArgumentException(s"Map direction not in expected format: $other"),
     )
 
 end DayEight

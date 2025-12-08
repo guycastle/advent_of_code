@@ -28,20 +28,22 @@ object DayOne extends DailyChallenge[Int]:
 
   @main def run(): Unit = evaluate()
 
-  private lazy val parseInputForPartOne: Seq[String] => (Seq[Int], Seq[Int]) = _.foldLeft((Seq.empty, Seq.empty)): (acc, line) =>
-    val split         = line.split("\\s+")
-    val left -> right = acc
-    (split.headOption.flatMap(_.toIntOption), split.lift(1).flatMap(_.toIntOption)) match
-      case (Some(a), Some(b)) => (left :+ a) -> (right :+ b)
-      case _                  => acc
-    end match
+  private lazy val parseInputForPartOne: Seq[String] => (Seq[Int], Seq[Int]) =
+    _.foldLeft((Seq.empty, Seq.empty)): (acc, line) =>
+      val split         = line.split("\\s+")
+      val left -> right = acc
+      (split.headOption.flatMap(_.toIntOption), split.lift(1).flatMap(_.toIntOption)) match
+        case (Some(a), Some(b)) => (left :+ a) -> (right :+ b)
+        case _                  => acc
+      end match
 
-  private lazy val parseInputForPartTwo: Seq[String] => (Seq[Int], Map[Int, Int]) = _.foldLeft((Seq.empty, Map.empty)): (acc, line) =>
-    val split         = line.split("\\s+")
-    val left -> right = acc
-    (split.headOption.flatMap(_.toIntOption), split.lift(1).flatMap(_.toIntOption)) match
-      case (Some(a), Some(b)) => (left :+ a) -> right.updatedWith(b)(count => (count.getOrElse(0) + 1).some)
-      case _                  => acc
-    end match
+  private lazy val parseInputForPartTwo: Seq[String] => (Seq[Int], Map[Int, Int]) =
+    _.foldLeft((Seq.empty, Map.empty)): (acc, line) =>
+      val split         = line.split("\\s+")
+      val left -> right = acc
+      (split.headOption.flatMap(_.toIntOption), split.lift(1).flatMap(_.toIntOption)) match
+        case (Some(a), Some(b)) => (left :+ a) -> right.updatedWith(b)(count => (count.getOrElse(0) + 1).some)
+        case _                  => acc
+      end match
 
 end DayOne

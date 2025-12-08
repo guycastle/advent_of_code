@@ -21,7 +21,8 @@ object DayTwo extends DailyChallenge[BigInt]:
     input.headOption.toSeq.flatMap(parseInput).map(sumOfInvalidIds(_, validationFunction)).sum
   end processInput
 
-  def sumOfInvalidIds(range: BigRange, validationFunction: Long => Boolean): BigInt = range.filterNot(validationFunction).sum
+  def sumOfInvalidIds(range: BigRange, validationFunction: Long => Boolean): BigInt =
+    range.filterNot(validationFunction).sum
   end sumOfInvalidIds
 
   val isValidIdPart1: Long => Boolean = _.toString match
@@ -34,7 +35,7 @@ object DayTwo extends DailyChallenge[BigInt]:
 
   val isValidIdPart2: Long => Boolean = _.toString match
     case id if id.length > 1 && id.distinct.length == 1 => false
-    case id                                             => !(2 to id.length / 2).map(id.grouped).exists(_.toSet.size == 1)
+    case id => !(2 to id.length / 2).map(id.grouped).exists(_.toSet.size == 1)
   end isValidIdPart2
 
   private val parseInput: String => Seq[BigRange] = _.split(",").toIndexedSeq

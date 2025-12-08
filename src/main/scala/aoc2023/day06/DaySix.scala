@@ -10,7 +10,8 @@ object DaySix extends DailyChallenge[Long]:
 
   override lazy val day: LocalDate = LocalDate.of(2023, 12, 6)
 
-  override def partOne(input: Seq[String]): Long = extractTimeAndDistance[Seq[Race]](parseInputPartOne)(input).map(waysToBeatRecord).product
+  override def partOne(input: Seq[String]): Long =
+    extractTimeAndDistance[Seq[Race]](parseInputPartOne)(input).map(waysToBeatRecord).product
 
   override def partTwo(input: Seq[String]): Long = waysToBeatRecord(extractTimeAndDistance(parseInputPartTwo)(input))
 
@@ -44,7 +45,7 @@ object DaySix extends DailyChallenge[Long]:
   lazy val parseInputPartTwo: (String, String) => Race =
     (time, distance) => Race(time = time.filter(_.isDigit).toLong, distance = distance.filter(_.isDigit).toLong)
 
-  lazy val parseInputPartOne: (String, String) => Seq[Race] =
-    (time, distance) => numberRegex.findAllIn(time).zip(numberRegex.findAllIn(distance)).toSeq.map((t, d) => Race(t.toLong, d.toLong))
+  lazy val parseInputPartOne: (String, String) => Seq[Race] = (time, distance) =>
+    numberRegex.findAllIn(time).zip(numberRegex.findAllIn(distance)).toSeq.map((t, d) => Race(t.toLong, d.toLong))
 
 end DaySix

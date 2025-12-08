@@ -15,8 +15,12 @@ object DaySixteen extends DailyChallenge[Int]:
     val contraption      = parseInput(input)
     val columnCount      = contraption.head.size
     val rowCount         = contraption.size
-    val horizontalStarts = (0 until rowCount).flatMap(y => Seq((Coords(x = 0, y = y), Direction.Right), (Coords(x = columnCount - 1, y = y), Direction.Left)))
-    val verticalStarts   = (0 until columnCount).flatMap(x => Seq((Coords(x = x, y = 0), Direction.Down), (Coords(x = x, y = rowCount - 1), Direction.Up)))
+    val horizontalStarts = (0 until rowCount).flatMap(y =>
+      Seq((Coords(x = 0, y = y), Direction.Right), (Coords(x = columnCount - 1, y = y), Direction.Left)),
+    )
+    val verticalStarts = (0 until columnCount).flatMap(x =>
+      Seq((Coords(x = x, y = 0), Direction.Down), (Coords(x = x, y = rowCount - 1), Direction.Up)),
+    )
     (horizontalStarts ++ verticalStarts).foldLeft(0):
       case (max, (coords, direction)) =>
         val energised = countEnergised(startingPoint = coords, direction = direction, contraption = contraption)
@@ -56,7 +60,11 @@ object DaySixteen extends DailyChallenge[Int]:
    *  @return
    *    an updated contraption with updated tiles that were energised
    */
-  private def navigate(c: Coords, dir: Direction, contraption: Contraption, splits: Seq[Coords] = Seq.empty): (Seq[Coords], Contraption) = (for
+  private def navigate(
+      c: Coords,
+      dir: Direction,
+      contraption: Contraption,
+      splits: Seq[Coords] = Seq.empty): (Seq[Coords], Contraption) = (for
     row  <- contraption.lift(c.y)
     tile <- row.lift(c.x)
   yield (row, tile)) match
@@ -65,10 +73,12 @@ object DaySixteen extends DailyChallenge[Int]:
         if !tile.isEnergised then contraption.updated(c.y, row.updated(c.x, tile.copy(isEnergised = true)))
         else contraption
       val newDirs = tile.action(dir)
-      if newDirs.size == 1 then navigate(c = newDirs.head.go(c), dir = newDirs.head, contraption = updatedContraption, splits = splits)
+      if newDirs.size == 1 then
+        navigate(c = newDirs.head.go(c), dir = newDirs.head, contraption = updatedContraption, splits = splits)
       else if !splits.contains(c) then
         newDirs.foldLeft((splits :+ c, updatedContraption)):
-          case ((splitPoints, currentContraption), newDir) => navigate(c = newDir.go(c), dir = newDir, contraption = currentContraption, splits = splitPoints)
+          case ((splitPoints, currentContraption), newDir) =>
+            navigate(c = newDir.go(c), dir = newDir, contraption = currentContraption, splits = splitPoints)
       else (splits, contraption)
       end if
     case None => (splits, contraption)

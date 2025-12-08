@@ -10,7 +10,8 @@ object DayFour extends DailyChallenge[Int]:
 
   override lazy val day: LocalDate = LocalDate.of(2025, 12, 4)
 
-  override def partOne(input: Seq[String]): Int = getCoordinatesOfSquaresWithLessThan4AdjacentRollsOfPaper(parseInput(input)).size
+  override def partOne(input: Seq[String]): Int =
+    getCoordinatesOfSquaresWithLessThan4AdjacentRollsOfPaper(parseInput(input)).size
   end partOne
 
   override def partTwo(input: Seq[String]): Int = removeRollsOfPapersFromGridRecursively(parseInput(input))
@@ -47,19 +48,20 @@ object DayFour extends DailyChallenge[Int]:
   end getCoordinatesOfSquaresWithLessThan4AdjacentRollsOfPaper
 
   @tailrec
-  private def removeRollsOfPapersFromGridRecursively(grid: Grid, removed: Int = 0): Int = getCoordinatesOfSquaresWithLessThan4AdjacentRollsOfPaper(grid) match
-    case removableCoordinates if removableCoordinates.isEmpty => removed
-    case removableCoordinates                                 =>
+  private def removeRollsOfPapersFromGridRecursively(grid: Grid, removed: Int = 0): Int =
+    getCoordinatesOfSquaresWithLessThan4AdjacentRollsOfPaper(grid) match
+      case removableCoordinates if removableCoordinates.isEmpty => removed
+      case removableCoordinates                                 =>
 
-      val updatedGrid = removableCoordinates
-        .groupBy(_.y)
-        .foldLeft(grid):
-          case (g, (y, columnsToRemove)) => g.updatedWith(y):
-              case Some(row) => row.view.filterKeys(col => !columnsToRemove.exists(c => c.x == col)) match
-                  case updatedRow if updatedRow.isEmpty => None
-                  case updatedRow                       => updatedRow.toMap.some
-              case None => None
-      removeRollsOfPapersFromGridRecursively(updatedGrid, removed + removableCoordinates.size)
+        val updatedGrid = removableCoordinates
+          .groupBy(_.y)
+          .foldLeft(grid):
+            case (g, (y, columnsToRemove)) => g.updatedWith(y):
+                case Some(row) => row.view.filterKeys(col => !columnsToRemove.exists(c => c.x == col)) match
+                    case updatedRow if updatedRow.isEmpty => None
+                    case updatedRow                       => updatedRow.toMap.some
+                case None => None
+        removeRollsOfPapersFromGridRecursively(updatedGrid, removed + removableCoordinates.size)
 
   private val parseInput: Seq[String] => Grid = _.zipWithIndex
     .map:

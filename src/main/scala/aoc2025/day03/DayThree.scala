@@ -29,7 +29,8 @@ object DayThree extends DailyChallenge[Long]:
       selectedBatteryJoltageRatings.zipWithIndex
         .map:
           // multiply the battery's joltage rating by 10 to the power of the reversed index
-          case (joltageRating, idx) => math.pow(10, selectedBatteryJoltageRatings.length - 1 - idx).toLong * joltageRating
+          case (joltageRating, idx) =>
+            math.pow(10, selectedBatteryJoltageRatings.length - 1 - idx).toLong * joltageRating
         .sum
     else
       val largestBatteryJoltage = bank.dropRight(requiredAmountOfBatteries - 1).max

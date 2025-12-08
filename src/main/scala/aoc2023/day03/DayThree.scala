@@ -28,13 +28,15 @@ object DayThree extends DailyChallenge[Int]:
   private lazy val symbolScanner: String => LineScan = line =>
     LineScan(
       symbolIndices = symbolsRegex.findAllIn(line).matchData.map(_.start).toSeq.flatMap(adjacentIndices),
-      partsByIndex = numberRegex.findAllIn(line).matchData.map(num => (num.start until num.end) -> num.matched.toInt).toMap,
+      partsByIndex =
+        numberRegex.findAllIn(line).matchData.map(num => (num.start until num.end) -> num.matched.toInt).toMap,
     )
 
   private lazy val gearScanner: String => LineScan = line =>
     LineScan(
       symbolIndices = gearRegex.findAllIn(line).matchData.map(_.start).toSeq,
-      partsByIndex = numberRegex.findAllIn(line).matchData.map(num => (num.start until num.end) -> num.matched.toInt).toMap,
+      partsByIndex =
+        numberRegex.findAllIn(line).matchData.map(num => (num.start until num.end) -> num.matched.toInt).toMap,
     )
 
   @tailrec
