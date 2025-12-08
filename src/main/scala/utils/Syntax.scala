@@ -1,6 +1,8 @@
 package utils
 
 import scala.annotation.tailrec
+import scala.math.BigDecimal.RoundingMode
+import scala.math.BigDecimal.RoundingMode.RoundingMode
 import scala.util.{Failure, Success, Try}
 
 trait Syntax:
@@ -14,6 +16,9 @@ trait Syntax:
     def numberOfDigits: Int =
       val num = implicitly[Numeric[A]]
       (math.floor(math.log10(num.toDouble(number))) + 1).toInt
+    def toRoundedString(paces: Int = 2, rounding: RoundingMode = RoundingMode.HALF_UP): String =
+      val num = implicitly[Numeric[A]]
+      BigDecimal(num.toDouble(number)).setScale(paces, rounding).toString
   end extension
 
   extension (str: String)
@@ -31,13 +36,20 @@ trait Syntax:
         case ((acc, curr), el) => if predicate(el) then (acc :+ curr, Seq.empty) else (acc, curr :+ el)
       split :+ last
     end splitBy
-    def foldLeftWhile[B](initialValue: B)(predicate: (A, B) => Boolean)(function: (A, B) => B): B =
+    def foldLeftWhile[B](initialValue: B)(predicate: (A, B) => Boolean)(function: (B, A) => B): B =
       @tailrec
       def loop(remaining: Iterable[A] = iterable, accumulator: B = initialValue): B = remaining.headOption match
-        case Some(value) if predicate(value, accumulator) => loop(remaining.tail, function(value, accumulator))
+        case Some(value) if predicate(value, accumulator) => loop(remaining.tail, function(accumulator, value))
         case _                                            => accumulator
       loop()
     end foldLeftWhile
+    def foldLeftUntil[B](initialValue: B)(predicate: (A, B) => Boolean)(function: (B, A) => B): B =
+      @tailrec
+      def loop(remaining: Iterable[A] = iterable, accumulator: B = initialValue): B = remaining.headOption match
+        case Some(value) if predicate(value, accumulator) => accumulator
+        case Some(value)                                            => loop(remaining.tail, function(accumulator, value))
+        case None => accumulator
+      loop()
     def toTryIterable[B](function: A => Try[B]): Try[Seq[B]] =
       @tailrec
       def tryElement(remaining: Iterable[A], accumulator: Seq[B] = Seq.empty): Try[Seq[B]] = remaining.headOption.map(function) match
