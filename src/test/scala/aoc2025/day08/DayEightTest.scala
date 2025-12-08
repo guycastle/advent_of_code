@@ -4,8 +4,7 @@ import utils.BaseTest
 
 class DayEightTest extends BaseTest:
 
-  private val input: Seq[String] =
-    """162,817,812
+  private val input: Seq[String] = """162,817,812
       |57,618,57
       |906,360,560
       |592,479,940
@@ -27,14 +26,14 @@ class DayEightTest extends BaseTest:
       |425,690,689
       |""".stripMargin.split("\n").toIndexedSeq
 
-  "Parsed input in part one" must :
+  "Parsed input in part one" must:
 
-    "calculate the correct output" in :
+    "calculate the correct output" in:
       DayEight.evaluatePartOne(input, 10) mustBe 40
 
-  "Parsed input in part two" must :
+  "Parsed input in part two" must:
 
-    "calculate the correct output" in :
-      DayEight.partTwo(input) mustBe 0
+    "calculate the correct output" in:
+      DayEight.partTwo(input) mustBe 25272
 
 end DayEightTest
