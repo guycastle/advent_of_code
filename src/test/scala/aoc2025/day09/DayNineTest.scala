@@ -21,6 +21,6 @@ class DayNineTest extends BaseTest:
   "Parsed input in part two" must:
 
     "calculate the correct output" in:
-      DayNine.partTwo(input) mustBe 0
+      DayNine.partTwo(input) mustBe 24
 
 end DayNineTest

@@ -1,6 +1,7 @@
 package utils
 
 import scala.annotation.tailrec
+import scala.collection.immutable.NumericRange
 import scala.math.BigDecimal.RoundingMode
 import scala.math.BigDecimal.RoundingMode.RoundingMode
 import scala.util.{Failure, Success, Try}
@@ -21,6 +22,21 @@ trait Syntax:
       val num = implicitly[Numeric[A]]
       BigDecimal(num.toDouble(number)).setScale(paces, rounding).toString
     end toRoundedString
+    def isEven: Boolean =
+      val num = implicitly[Numeric[A]]
+      num.toDouble(number) % 2 == 0
+    end isEven
+    def isOdd: Boolean = !isEven
+  end extension
+
+  extension [A: Numeric](range: NumericRange[A])
+    def overlaps(other: NumericRange[A]): Boolean =
+      val num = implicitly[Numeric[A]]
+      num.compare(num.max(range.start, other.start), num.min(range.end, other.end)) < 0
+  end extension
+
+  extension (range: Range)
+    def overlaps(other: Range): Boolean = (range.start.max(other.start)) < (range.end.min(other.end))
   end extension
 
   extension (str: String)
