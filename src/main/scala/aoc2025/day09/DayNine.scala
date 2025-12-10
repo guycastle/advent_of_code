@@ -2,7 +2,7 @@ package aoc2025.day09
 
 import utils.DailyChallenge
 import utils.Syntax.*
-import utils.structs.Point
+import utils.custom.Point
 
 import java.time.LocalDate
 

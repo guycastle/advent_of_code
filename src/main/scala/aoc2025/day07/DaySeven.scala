@@ -2,7 +2,7 @@ package aoc2025.day07
 
 import utils.DailyChallenge
 import utils.Syntax.some
-import utils.structs.Coordinate
+import utils.custom.Coordinate
 
 import java.time.LocalDate
 import scala.annotation.tailrec
