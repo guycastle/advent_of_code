@@ -1,7 +1,7 @@
 package aoc2024.day11
 
 import utils.BaseTest
-import utils.Syntax.*
+import utils.syntax.*
 
 class DayElevenTest extends BaseTest:
 

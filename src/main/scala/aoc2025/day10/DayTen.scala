@@ -1,6 +1,7 @@
 package aoc2025.day10
 
 import utils.DailyChallenge
+import utils.syntax.*
 import utils.custom.{Bit, Bits}
 
 import java.time.LocalDate
@@ -10,7 +11,7 @@ object DayTen extends DailyChallenge[Int]:
 
   override lazy val day: LocalDate = LocalDate.of(2025, 12, 10)
 
-  override def partOne(input: Seq[String]): Int = parseInput(input).map(amountOfButtonPresses).sum
+  override def partOne(input: Seq[String]): Int = parseInput(input).flatMap(amountOfButtonPressesIndicatorLights).sum
 
   override def partTwo(input: Seq[String]): Int = 0
 
@@ -24,18 +25,19 @@ object DayTen extends DailyChallenge[Int]:
       buttonWiringSchematics: Seq[Bits],
       joltageRequirements: JoltageRequirements)
 
-  private val amountOfButtonPresses: Machine => Int = machine =>
-    findFewestAmountOfButtonPresses(target = machine.indicatorLights,
-                                    options = machine.buttonWiringSchematics,
-                                    currentNumberOfButtons = 1,
+  private val amountOfButtonPressesIndicatorLights: Machine => Option[Int] = machine =>
+    findFewestAmountOfButtonPressesIndicatorLights(target = machine.indicatorLights,
+                                                   options = machine.buttonWiringSchematics,
+                                                   currentNumberOfButtons = 1,
     )
 
   @tailrec
-  private def findFewestAmountOfButtonPresses(
+  private def findFewestAmountOfButtonPressesIndicatorLights(
       target: Seq[Bit],
       options: Seq[Seq[Bit]],
-      currentNumberOfButtons: Int): Int =
-    if target.isEmpty || !target.contains(1) then 0
+      currentNumberOfButtons: Int): Option[Int] =
+    if currentNumberOfButtons > options.size then None
+    else if target.isEmpty || !target.contains(1) then 0.some
     else
       options
         .combinations(currentNumberOfButtons)
@@ -45,11 +47,9 @@ object DayTen extends DailyChallenge[Int]:
             .forall:
               case (targetBit -> flips) => flips.sum % 2 == targetBit
       match
-        case Some(combo) =>
-          println(s"Found combo ${combo.map(_.mkString("(", ",", ")")).mkString(" & ")}")
-          currentNumberOfButtons
-        case None => findFewestAmountOfButtonPresses(target, options, currentNumberOfButtons + 1)
-  end findFewestAmountOfButtonPresses
+        case Some(combo) => currentNumberOfButtons.some
+        case None        => findFewestAmountOfButtonPressesIndicatorLights(target, options, currentNumberOfButtons + 1)
+  end findFewestAmountOfButtonPressesIndicatorLights
 
   private val parseInput: Seq[String] => Seq[Machine] = _.flatMap: line =>
     val components = line.split(" ").toSeq

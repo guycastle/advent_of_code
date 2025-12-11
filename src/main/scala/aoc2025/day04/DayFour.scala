@@ -1,7 +1,7 @@
 package aoc2025.day04
 
 import utils.DailyChallenge
-import utils.Syntax.some
+import utils.syntax.some
 
 import java.time.LocalDate
 import scala.annotation.tailrec

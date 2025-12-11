@@ -6,7 +6,7 @@ import scala.math.BigDecimal.RoundingMode
 import scala.math.BigDecimal.RoundingMode.RoundingMode
 import scala.util.{Failure, Success, Try}
 
-trait Syntax:
+trait syntax:
 
   extension [A](obj: A)
     def some: Option[A]            = Some(obj)
@@ -33,6 +33,13 @@ trait Syntax:
     def overlaps(other: NumericRange[A]): Boolean =
       val num = implicitly[Numeric[A]]
       num.compare(num.max(range.start, other.start), num.min(range.end, other.end)) < 0
+  end extension
+
+  extension [A: Numeric](a: Seq[A])
+    inline infix def plus(b: Seq[A]): Seq[A] =
+      require(a.size == b.size, "Cannot add sequences of different sizes")
+      val num = implicitly[Numeric[A]]
+      a.zip(b).map((a, b) => num.plus(a, b))
   end extension
 
   extension (range: Range)
@@ -82,5 +89,5 @@ trait Syntax:
     end toTryIterable
   end extension
 
-end Syntax
-object Syntax extends Syntax
+end syntax
+object syntax extends syntax

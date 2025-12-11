@@ -1,7 +1,7 @@
 package aoc2025.day06
 
 import utils.DailyChallenge
-import utils.Syntax.*
+import utils.syntax.*
 
 import java.time.LocalDate
 

@@ -18,6 +18,6 @@ class DayTenTest extends BaseTest:
   "Parsed input in part two" must:
 
     "calculate the correct output" in:
-      DayTen.partTwo(input) mustBe 0
+      DayTen.partTwo(input) mustBe 33
 
 end DayTenTest
